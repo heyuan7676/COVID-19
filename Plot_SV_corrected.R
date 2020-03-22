@@ -10,6 +10,9 @@ for(tissue in sort(unique(samples$SMTSD))){
   if(inherits(df, "try-error")){
     next
   }
+  ## remove tissues with less than 70 samples
+  sample_in_the_tissue = samples %>% filter(SMTSD == tissue)
+  if(nrow(sample_in_the_tissue) < 70){ next }
   collect_result = rbind(collect_result, df)
 }
 
@@ -17,8 +20,13 @@ collect_result = collect_result[collect_result$p.value > -1, ]
 collect_result$median_TPM = 10^(collect_result$median_TPM) - 1
 collect_result = collect_result[collect_result$median_TPM > 1, ]
 collect_result$FDR = p.adjust(collect_result$p.value, method = 'BH')
+collect_result = collect_result[,c("Tissue", "Gene", "Variable",
+                                   "median_TPM", "coefficient", "p.value", "FDR")]
+collect_result = collect_result[order(collect_result$p.value), ]
+write.table(collect_result, paste0(outdir, 'associations_SVA.csv'),sep = ',',row.names = F)
+
 collect_result = collect_result[collect_result$FDR < 0.05, ]
-collect_result
+write.table(collect_result, paste0(outdir, 'significant_associations.txt'), sep='\t', row.names = F)
 
 # plot
 for(i in seq(1, nrow(collect_result))){
