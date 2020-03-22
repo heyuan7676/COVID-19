@@ -9,7 +9,7 @@ source("utils.R")
 ###
 
 
-readin_geme_tpm <- function(){
+readin_gene_tpm <- function(){
   df = fread(paste0(datadir, 'gene_tpm.gct'))
   df.t = transpose(df)
   df.t$sampleID = colnames(df)
@@ -196,7 +196,7 @@ plot_gene_age <- function(geneI, df){
 
 }
 
-gene_tpm.t <- readin_geme_tpm()
+gene_tpm.t <- readin_gene_tpm()
 ACE2_result = check_geneI("ACE2")
 TMPRSS2_result = check_geneI("TMPRSS2")
 
@@ -211,7 +211,7 @@ reg_result = reg_result[order(reg_result$pvalue), ]
 write.table(reg_result, paste0(outdir, 'gene_cov_correlations.csv'), sep=',', row.names = F)
 
 #### Plot
-reg_result = read.table(paste0(outdir, 'gene_cov_correlations.txt'), sep='\t',header = T,stringsAsFactors = F)
+reg_result = read.table(paste0(outdir, 'gene_cov_correlations.csv'), sep=',',header = T,stringsAsFactors = F)
 reg_result = reg_result[reg_result$FDR < 0.05, ]
 
 plot_gene_sex("ACE2", reg_result)
