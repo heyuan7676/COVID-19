@@ -1,5 +1,6 @@
 library(dplyr)
 library(data.table)
+library(ggplot2)
 
 readin_samples <- function(){
   samples = fread(paste0(datadir, 'GTEx_Analysis_v8_Annotations_SampleAttributesDS.txt'))
@@ -30,5 +31,6 @@ readin_samples <- function(){
 
 
 datadir = '/work-zfs/abattle4/heyuan/COVID_19/temp/'
+outdir = '/work-zfs/abattle4/heyuan/COVID_19/temp/'
 donors = fread(paste0(datadir, 'GTEx_Analysis_v8_Annotations_SubjectPhenotypesDS.txt'))
 samples = readin_samples()
