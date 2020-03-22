@@ -8,13 +8,14 @@ source("utils.R")
 ##Each row is the test for one gene in one tissue, for either AGE or SEX
 ###
 
-
 readin_gene_tpm <- function(){
   df = fread(paste0(datadir, 'gene_tpm.gct'))
   df.t = transpose(df)
   df.t$sampleID = colnames(df)
   return(df.t)
 }
+
+#Returns table of TPM and covariates for patients with given tissue type
 readin_data_in_tissue <- function(tissue){
   # sample covariates
   sample_in_the_tissue = samples %>% filter(SMTSD == tissue)
@@ -49,6 +50,8 @@ readin_data_in_tissue <- function(tissue){
   return(df_test.complete)
 }
 
+
+#This outputs a table listing each "Tissue", "Gene", "Variable", "Median_TPM","coefficient", "pvalue", FDR and FWER.
 check_geneI <- function(geneI){
   collect_result = NULL
   for(tissue in sort(unique(samples$SMTSD))){
@@ -109,7 +112,7 @@ plot_gene_sex <- function(geneI, df){
   df_for_plot = NULL
   
   for(i in seq(1, dim(Gene_SEX)[1])){
-    rowi = Gene_SEX[i, ]
+    rowi = Gene_SEX[i, ] 
     tissue = as.character(rowi['Tissue'])
     
     ### read in
@@ -140,7 +143,8 @@ plot_gene_sex <- function(geneI, df){
       ylab(paste0("Corrected expression of ", geneI)) + 
       scale_fill_brewer(palette = 'Set1')
     
-    png(paste0(outdir, geneI, '_SEX_',tissue,'.png'), res = 130, height = 400)
+    tis_name = gsub(" ", "_", gsub('\\)', '', gsub(' \\(', '_', gsub(' - ', '_', tissue)))) 
+    png(paste0(outdir, geneI, '_SEX_',tis_name,'.png'), res = 130, height = 400)
     print(g_sex)
     dev.off()
   }
@@ -188,7 +192,8 @@ plot_gene_age <- function(geneI, df){
       ylab(paste0("Corrected expression of ", geneI)) + 
       scale_fill_brewer(palette = 'Greens')
     
-    png(paste0(outdir, geneI, '_AGE_',tissue,'.png'), res = 130, height = 400)
+    tis_name = gsub(" ", "_", gsub('\\)', '', gsub(' \\(', '_', gsub(' - ', '_', tissue)))) 
+    png(paste0(outdir, geneI, '_AGE_',tis_name,'.png'), res = 130, height = 400)
     print(g_AGE)
     dev.off()
   }
