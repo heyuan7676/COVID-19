@@ -210,6 +210,7 @@ reg_result = rbind(ACE2_result, TMPRSS2_result)
 #reg_result = reg_result[reg_result$Median_TPM > 1, ]
 #reg_result$FDR = p.adjust(reg_result$pvalue, method = 'BH')
 #reg_result$FWER = p.adjust(reg_result$pvalue, method = 'bonferroni')
+#
 
 reg_result = reg_result[order(reg_result$pvalue), ]
 
