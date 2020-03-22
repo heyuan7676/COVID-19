@@ -1,9 +1,10 @@
 # COVID-19: association between expression and AGE/SEX 
-Script dependencies include the following R packages
-	- dplyr
-	- data.table
-	- ggplot2
-	- sva
+Script dependencies include the following R packages:
+* dplyr
+* data.table
+* ggplot2
+* sva
+
 
 `tpm_age_sex.R`: controlling for covariates below by regressing them out:<br/>
                     # DTHHRDY  - Death Circumstances<br/>
