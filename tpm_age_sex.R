@@ -22,9 +22,11 @@ readin_data_in_tissue <- function(tissue){
   # read in genotype PCs
   tis = gsub(" ", "_", gsub('\\)', '', gsub(' \\(', '_', gsub(' - ', '_', tissue))))
   print(paste0("Tissue: ", tissue, "; Tis: ",tis))
-  genotype_PCs  = try(read.table(paste0(datadir, 'GTEx_Analysis_v8_eQTL_covariates/',tis,'.v8.covariates.txt'), 
-                                 sep='\t', header = T, stringsAsFactors = F, row.names = 1))
-  if(inherits(genotype_PCs, "try-error")){
+  genotype_PCs  = tryCatch(read.table(paste0(datadir, 'GTEx_Analysis_v8_eQTL_covariates/',tis,'.v8.covariates.txt'), 
+                                 sep='\t', header = T, stringsAsFactors = F, row.names = 1), warning = function (w) {print(paste("No data available for tissue type", tis))}, error = function(f) {return("failed")}
+                                  )
+  if(inherits(genotype_PCs, "character")){
+    print(paste(" ", "Skipping tissue", tis))
     return()
   }
   genotype_PCs = genotype_PCs[1:5, ]
@@ -194,7 +196,7 @@ plot_gene_age <- function(geneI, df){
 
 }
 
-
+gene_tpm.t <- readin_geme_tpm()
 ACE2_result = check_geneI("ACE2")
 TMPRSS2_result = check_geneI("TMPRSS2")
 
