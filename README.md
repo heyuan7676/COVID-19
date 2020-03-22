@@ -1,13 +1,13 @@
 # COVID-19: association between expression and AGE/SEX 
 
-Approach I:
+Approach I: <br/>
 `tpm_age_sex.R`: controlling for covariates below by regressing them out:<br/>
                     # DTHHRDY  - Death Circumstances<br/>
                     # SMRIN  - RIN number <br/>
                     # SMTSISCH - Total Ischemic time <br/>
                     # SMEXNCRT - Exonic Rate <br/>
                  
-Approach II:
+Approach II:<br/>
 `extract_protein_coding_lincRNA_genes.sh`: Extract genes that are protein coding or lincRNA
 
 `generate_tissue_wise_TPM.R`: Generate a matrix of genes by samples for each tissue
