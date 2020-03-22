@@ -145,7 +145,6 @@ args <- commandArgs(TRUE)
 
 ## Among these, samples were selected based on donor genotype
 ## availability and a threshold of at least 70 samples per tissue
-all_samples = fread(paste0(datadir, 'GTEx_Analysis_v8_Annotations_SampleAttributesDS.txt'))
 tissue_idx = as.numeric(args[1])
 tissue = sort(unique(samples$SMTSD))[tissue_idx]
 print(tissue)
