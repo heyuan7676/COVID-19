@@ -22,7 +22,7 @@ readin_data_in_tissue <- function(tissue){
   
   # read in genotype PCs
   tis = gsub(" ", "_", gsub('\\)', '', gsub(' \\(', '_', gsub(' - ', '_', tissue))))
-  print(paste0("Tissue: ", tissue, "; Tis: ",tis))
+  #print(paste0("Tissue: ", tissue, "; Tis: ",tis))
   genotype_PCs  = tryCatch(read.table(paste0(datadir, 'GTEx_Analysis_v8_eQTL_covariates/',tis,'.v8.covariates.txt'), 
                                  sep='\t', header = T, stringsAsFactors = F, row.names = 1), warning = function (w) {print(paste("No data available for tissue type", tis))}, error = function(f) {return("failed")}
                                   )
@@ -72,8 +72,12 @@ check_geneI <- function(geneI){
                        summary(model)$coefficients[,4]["AGE_GROUP"])
     collect_result = rbind(collect_result, AGE_GROUP_test)
     
+    
     # if only one sex, skip this step
-    if(length(unique(exp_for_tiss$SEX)) == 2){
+    # if the tissue has less than 10 samples in either gender group, skip this step
+    if(sum(table(exp_for_tiss$SEX) < 10) > 0){
+      SEX_test = c(tissue, geneI,"SEX",median(as.numeric(exp_for_tiss[,geneI])), 0, -1)
+    }else if(length(unique(exp_for_tiss$SEX)) == 2){
       SEX_test = c(tissue, geneI, "SEX", median(as.numeric(exp_for_tiss[,geneI])),
                    summary(model)$coefficients[,3]["SEX"], 
                    summary(model)$coefficients[,4]["SEX"])
@@ -94,7 +98,7 @@ check_geneI <- function(geneI){
   
   collect_result$Median_TPM = as.numeric(as.character(collect_result$Median_TPM))
   collect_result = collect_result[collect_result$Median_TPM > 1, ]
-  #collect_result$FDR = p.adjust(collect_result$pvalue, method = 'BH')
+  collect_result$FDR = p.adjust(collect_result$pvalue, method = 'BH')
 
   return(collect_result)
 }
@@ -209,10 +213,8 @@ TMPRSS2_result = check_geneI("TMPRSS2")
 reg_result = rbind(ACE2_result, TMPRSS2_result)
 reg_result$Median_TPM = as.numeric(as.character(reg_result$Median_TPM))
 reg_result = reg_result[reg_result$Median_TPM > 1, ]
-reg_result$FDR = p.adjust(reg_result$pvalue, method = 'BH')
 
 reg_result = reg_result[order(reg_result$pvalue), ]
-
 write.table(reg_result, paste0(outdir, 'gene_cov_correlations_LR.csv'), sep=',', row.names = F)
 
 #### Plot

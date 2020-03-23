@@ -16,14 +16,25 @@ for(tissue in sort(unique(samples$SMTSD))){
   collect_result = rbind(collect_result, df)
 }
 
+## remove tests with < 10 samples in either gender group
 collect_result = collect_result[collect_result$p.value > -1, ]
+
+## remove tissues with low gene expression (median TPM < 1)
 collect_result$median_TPM = 10^(collect_result$median_TPM) - 1
 collect_result = collect_result[collect_result$median_TPM > 1, ]
-collect_result$FDR = p.adjust(collect_result$p.value, method = 'BH')
+
+## compute FDR for each gene seperately
+ace2 = collect_result[collect_result$Gene == 'ACE2', ]
+TMPRSS2 = collect_result[collect_result$Gene == 'TMPRSS2', ]
+ace2$FDR = p.adjust(ace2$p.value, method = 'BH')
+TMPRSS2$FDR = p.adjust(TMPRSS2$p.value, method = 'BH')
+collect_result = rbind(ace2, TMPRSS2)
 collect_result = collect_result[,c("Tissue", "Gene", "Variable",
                                    "median_TPM", "coefficient", "p.value", "FDR")]
 collect_result = collect_result[order(collect_result$p.value), ]
 write.table(collect_result, paste0(outdir, 'gene_cov_correlations_SVA.csv'),sep = ',',row.names = F)
+
+
 
 collect_result = collect_result[collect_result$FDR < 0.05, ]
 
