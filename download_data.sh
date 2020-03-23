@@ -25,6 +25,7 @@ awk '(!/^#/) {print $10,$14,$16}'  gencode.v26.annotation.gtf | sed 's/[";]//g' 
 
 #Set up directories
 mkdir -p GTEx_data
+mkdir -p GTEx_data/tissue_tpm #Used by generate_tissue_wise_TPM.R and tpm_age_sex_sva.R
 mv *.gct GTEx_data
 mv *.txt GTEx_data
 mv GTEx_Analysis_v8_eQTL_covariates ./GTEx_data/
