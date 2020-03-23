@@ -62,7 +62,7 @@ check_geneI <- function(geneI){
     }
     
     ### log transform
-    exp_for_tiss$geneEXP = log2(as.numeric(exp_for_tiss[,geneI])+1)
+    exp_for_tiss$geneEXP = log10(as.numeric(exp_for_tiss[,geneI])+1)
 
     ### fit on geneEXP
     model   = lm(geneEXP~PC1+PC2+PC3+PC4+PC5+AGE_GROUP+SEX+DTHHRDY+SMRIN+SMTSISCH+SMEXNCRT, 
@@ -119,7 +119,7 @@ plot_gene_sex <- function(geneI, df){
     exp_for_tiss = readin_data_in_tissue(tissue)
     
     ### log transform
-    exp_for_tiss$geneEXP = log2(as.numeric(exp_for_tiss[,geneI])+1)
+    exp_for_tiss$geneEXP = log10(as.numeric(exp_for_tiss[,geneI])+1)
     
     ### fit the model
     model   = lm(geneEXP~PC1+PC2+PC3+PC4+PC5+AGE_GROUP+DTHHRDY+SMRIN+SMTSISCH+SMEXNCRT, 
@@ -168,7 +168,7 @@ plot_gene_age <- function(geneI, df){
     exp_for_tiss = readin_data_in_tissue(tissue)
     
     ### log transform
-    exp_for_tiss$geneEXP = log2(as.numeric(exp_for_tiss[,geneI])+1)
+    exp_for_tiss$geneEXP = log10(as.numeric(exp_for_tiss[,geneI])+1)
     
     ### fit the model
     model   = lm(geneEXP~PC1+PC2+PC3+PC4+PC5+SEX+DTHHRDY+SMRIN+SMTSISCH+SMEXNCRT, 
@@ -201,7 +201,7 @@ plot_gene_age <- function(geneI, df){
 
 }
 
-gene_tpm.t <- readin_gene_tpm()
+gene_tpm.t = readin_geme_tpm()
 ACE2_result = check_geneI("ACE2")
 TMPRSS2_result = check_geneI("TMPRSS2")
 
