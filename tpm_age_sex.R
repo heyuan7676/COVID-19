@@ -51,7 +51,7 @@ readin_data_in_tissue <- function(tissue){
 }
 
 
-#This outputs a table listing each "Tissue", "Gene", "Variable", "Median_TPM","coefficient", "pvalue", FDR and FWER.
+#This outputs a table listing each "Tissue", "Gene", "Variable", "Median_TPM","coefficient", "pvalue", FDR
 check_geneI <- function(geneI){
   collect_result = NULL
   for(tissue in sort(unique(samples$SMTSD))){
@@ -65,7 +65,7 @@ check_geneI <- function(geneI){
     exp_for_tiss$geneEXP = log2(as.numeric(exp_for_tiss[,geneI])+1)
 
     ### fit on geneEXP
-    model   = lm(geneEXP~PC1+PC2+PC3+PC4+PC5+AGE_GROUP+SEX+DTHHRDY+SMRIN+SMTSISCH+SMEXNCRT, 
+    model   = lm(geneEXP~PC1+PC2+PC3+PC4+PC5+AGE_GROUP+SEX+factor(DTHHRDY)+SMRIN+SMTSISCH+SMEXNCRT, 
                  data = exp_for_tiss)
     AGE_GROUP_test = c(tissue, geneI, "AGE", median(as.numeric(exp_for_tiss[,geneI])), 
                        summary(model)$coefficients[,3]["AGE_GROUP"], 
@@ -94,9 +94,8 @@ check_geneI <- function(geneI){
   
   collect_result$Median_TPM = as.numeric(as.character(collect_result$Median_TPM))
   collect_result = collect_result[collect_result$Median_TPM > 1, ]
-  collect_result$FDR = p.adjust(collect_result$pvalue, method = 'BH')
-  collect_result$FWER = p.adjust(collect_result$pvalue, method = 'bonferroni')
-  
+  #collect_result$FDR = p.adjust(collect_result$pvalue, method = 'BH')
+
   return(collect_result)
 }
 
@@ -122,7 +121,7 @@ plot_gene_sex <- function(geneI, df){
     exp_for_tiss$geneEXP = log2(as.numeric(exp_for_tiss[,geneI])+1)
     
     ### fit the model
-    model   = lm(geneEXP~PC1+PC2+PC3+PC4+PC5+AGE_GROUP+DTHHRDY+SMRIN+SMTSISCH+SMEXNCRT, 
+    model   = lm(geneEXP~PC1+PC2+PC3+PC4+PC5+AGE_GROUP+factor(DTHHRDY)+SMRIN+SMTSISCH+SMEXNCRT, 
                  data = exp_for_tiss)
     exp_for_tiss$corrected_expression = model$residuals
     
@@ -171,7 +170,7 @@ plot_gene_age <- function(geneI, df){
     exp_for_tiss$geneEXP = log2(as.numeric(exp_for_tiss[,geneI])+1)
     
     ### fit the model
-    model   = lm(geneEXP~PC1+PC2+PC3+PC4+PC5+SEX+DTHHRDY+SMRIN+SMTSISCH+SMEXNCRT, 
+    model   = lm(geneEXP~PC1+PC2+PC3+PC4+PC5+SEX+factor(DTHHRDY)+SMRIN+SMTSISCH+SMEXNCRT, 
                  data = exp_for_tiss)
     exp_for_tiss$corrected_expression = model$residuals
     
@@ -206,11 +205,9 @@ ACE2_result = check_geneI("ACE2")
 TMPRSS2_result = check_geneI("TMPRSS2")
 
 reg_result = rbind(ACE2_result, TMPRSS2_result)
-#reg_result$Median_TPM = as.numeric(as.character(reg_result$Median_TPM))
-#reg_result = reg_result[reg_result$Median_TPM > 1, ]
-#reg_result$FDR = p.adjust(reg_result$pvalue, method = 'BH')
-#reg_result$FWER = p.adjust(reg_result$pvalue, method = 'bonferroni')
-#
+reg_result$Median_TPM = as.numeric(as.character(reg_result$Median_TPM))
+reg_result = reg_result[reg_result$Median_TPM > 1, ]
+reg_result$FDR = p.adjust(reg_result$pvalue, method = 'BH')
 
 reg_result = reg_result[order(reg_result$pvalue), ]
 
