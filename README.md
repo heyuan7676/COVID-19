@@ -10,10 +10,10 @@ Script dependencies include the following R packages:
 Approach I: <br/>
 Scripts to be run in the following order:
 `tpm_age_sex.R`: controlling for covariates below by regressing them out:<br/>
-..* DTHHRDY  - Death Circumstances<br/>
-..* SMRIN  - RIN number <br/>
-..* SMTSISCH - Total Ischemic time <br/>
-..* SMEXNCRT - Exonic Rate <br/>
+    * DTHHRDY  - Death Circumstances<br/>
+    * SMRIN  - RIN number <br/>
+    * SMTSISCH - Total Ischemic time <br/>
+    * SMEXNCRT - Exonic Rate <br/>
                  
  `extract_protein_coding_lincRNA_genes.sh`: Extract genes that are protein coding or lincRNA<br/>
 `generate_tissue_wise_TPM.R`: Generate a matrix of genes by samples for each tissue. <br/>
