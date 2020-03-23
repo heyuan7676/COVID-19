@@ -130,12 +130,12 @@ plot_gene_sex <- function(geneI, df){
     df_for_plot$Median_TPM = rowi$Median_TPM
     #df_for_plot = rbind(df_for_plot, df_for_plot_i)
     
-    df_for_plot$tissue_coeff = paste0(df_for_plot$SMTSD, 
+    ggtitle_text = paste0(df_for_plot$SMTSD, 
                                       ":\n coef = ", round(df_for_plot$coefficient, 3),
                                       ":\n median TPM = ", df_for_plot$Median_TPM)
     g_sex = ggplot(aes(x = Gender, y = corrected_expression), data = df_for_plot) + 
       geom_boxplot(aes(fill = Gender)) + 
-      facet_wrap(~tissue_coeff) + 
+      ggtitle(ggtitle_text) + 
       theme_bw() + 
       theme(axis.text.x = element_blank()) + 
       xlab("") + 
@@ -143,7 +143,8 @@ plot_gene_sex <- function(geneI, df){
       scale_fill_brewer(palette = 'Set1')
     
     tis_name = gsub(" ", "_", gsub('\\)', '', gsub(' \\(', '_', gsub(' - ', '_', tissue)))) 
-    png(paste0(outdir, geneI, '_',tis_name,'_SEX_LR.png'), res = 130, height = 400)
+    png(paste0(outdir, geneI, '_',tis_name,'_SEX_LR.png'), 
+        res = 130, height = 500, width = 600)
     print(g_sex)
     dev.off()
   }
@@ -179,12 +180,12 @@ plot_gene_age <- function(geneI, df){
     df_for_plot$Median_TPM = rowi$Median_TPM
     df_for_plot = rbind(df_for_plot, df_for_plot)
     
-    df_for_plot$tissue_coeff = paste0(df_for_plot$SMTSD, 
+    ggtitle_text = paste0(df_for_plot$SMTSD, 
                                       ":\n coef = ", round(df_for_plot$coefficient, 3),
                                       ":\n median TPM = ", df_for_plot$Median_TPM) 
     g_AGE = ggplot(aes(x = AGE, y = corrected_expression), data = df_for_plot) + 
       geom_boxplot(aes(fill = AGE)) + 
-      facet_wrap(~tissue_coeff) + 
+      ggtitle(ggtitle_text) + 
       theme_bw() + 
       theme(axis.text.x = element_blank()) + 
       xlab("") + 
@@ -192,7 +193,8 @@ plot_gene_age <- function(geneI, df){
       scale_fill_brewer(palette = 'Greens')
     
     tis_name = gsub(" ", "_", gsub('\\)', '', gsub(' \\(', '_', gsub(' - ', '_', tissue)))) 
-    png(paste0(outdir, geneI, '_',tis_name,'_AGE_LR.png'), res = 130, height = 400)
+    png(paste0(outdir, geneI, '_',tis_name,'_AGE_LR.png'), 
+        res = 130, height = 500, width = 600)
     print(g_AGE)
     dev.off()
   }
