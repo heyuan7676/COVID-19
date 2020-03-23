@@ -20,15 +20,15 @@ Scripts to be run in the following order:
 `tpm_age_sex_sva.R`: infer about surrogate variables (SVs) using SVA and regress the SVs out<br/>
                     When testing for AGE, keep AGE in SVA; when testing for SEX, keep SEX in SVA.<br/>
                     Pass in the tissue of interest's number (number can be found by:
-                    `cut -f7 GTEx_data/GTEx_Analysis_v8_Annotations_SampleAttributesDS.txt | sort -u | grep -n "tissue_of_interest"`
+                    `cut -f7 GTEx_data/GTEx_Analysis_v8_Annotations_SampleAttributesDS.txt | sort -u | grep -n "tissue_of_interest"` - 1 
                               
                     
 
 
 Approach II:<br/>
-`extract_protein_coding_lincRNA_genes.sh`: Extract genes that are protein coding or lincRNA
+`extract_protein_coding_lincRNA_genes.sh`: Extract genes that are protein coding or lincRNA<br/>
 
-`generate_tissue_wise_TPM.R`: Generate a matrix of genes by samples for each tissue
+`generate_tissue_wise_TPM.R`: Generate a matrix of genes by samples for each tissue<br/>
 
 `tpm_age_sex_sva.R`: infer about surrogate variables (SVs) using SVA and regress the SVs out<br/>
                     When testing for AGE, keep AGE in SVA; when testing for SEX, keep SEX in SVA.
