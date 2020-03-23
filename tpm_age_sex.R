@@ -62,7 +62,7 @@ check_geneI <- function(geneI){
     }
     
     ### log transform
-    exp_for_tiss$geneEXP = log2(as.numeric(exp_for_tiss[,geneI])+1)
+    exp_for_tiss$geneEXP = log10(as.numeric(exp_for_tiss[,geneI])+1)
 
     ### fit on geneEXP
     model   = lm(geneEXP~PC1+PC2+PC3+PC4+PC5+AGE_GROUP+SEX+factor(DTHHRDY)+SMRIN+SMTSISCH+SMEXNCRT, 
@@ -118,7 +118,7 @@ plot_gene_sex <- function(geneI, df){
     exp_for_tiss = readin_data_in_tissue(tissue)
     
     ### log transform
-    exp_for_tiss$geneEXP = log2(as.numeric(exp_for_tiss[,geneI])+1)
+    exp_for_tiss$geneEXP = log10(as.numeric(exp_for_tiss[,geneI])+1)
     
     ### fit the model
     model   = lm(geneEXP~PC1+PC2+PC3+PC4+PC5+AGE_GROUP+factor(DTHHRDY)+SMRIN+SMTSISCH+SMEXNCRT, 
@@ -143,7 +143,7 @@ plot_gene_sex <- function(geneI, df){
       scale_fill_brewer(palette = 'Set1')
     
     tis_name = gsub(" ", "_", gsub('\\)', '', gsub(' \\(', '_', gsub(' - ', '_', tissue)))) 
-    png(paste0(outdir, geneI, '_SEX_',tis_name,'.png'), res = 130, height = 400)
+    png(paste0(outdir, geneI, '_',tis_name,'_SEX_LR.png'), res = 130, height = 400)
     print(g_sex)
     dev.off()
   }
@@ -167,7 +167,7 @@ plot_gene_age <- function(geneI, df){
     exp_for_tiss = readin_data_in_tissue(tissue)
     
     ### log transform
-    exp_for_tiss$geneEXP = log2(as.numeric(exp_for_tiss[,geneI])+1)
+    exp_for_tiss$geneEXP = log10(as.numeric(exp_for_tiss[,geneI])+1)
     
     ### fit the model
     model   = lm(geneEXP~PC1+PC2+PC3+PC4+PC5+SEX+factor(DTHHRDY)+SMRIN+SMTSISCH+SMEXNCRT, 
@@ -192,7 +192,7 @@ plot_gene_age <- function(geneI, df){
       scale_fill_brewer(palette = 'Greens')
     
     tis_name = gsub(" ", "_", gsub('\\)', '', gsub(' \\(', '_', gsub(' - ', '_', tissue)))) 
-    png(paste0(outdir, geneI, '_AGE_',tis_name,'.png'), res = 130, height = 400)
+    png(paste0(outdir, geneI, '_',tis_name,'_AGE_LR.png'), res = 130, height = 400)
     print(g_AGE)
     dev.off()
   }
@@ -215,7 +215,7 @@ write.table(reg_result, paste0(outdir, 'gene_cov_correlations.csv'), sep=',', ro
 
 #### Plot
 reg_result = read.table(paste0(outdir, 'gene_cov_correlations.csv'), sep=',',header = T,stringsAsFactors = F)
-reg_result = reg_result[reg_result$FDR < 0.05, ]
+reg_result = reg_result[reg_result$FDR < 0.1, ]
 
 plot_gene_sex("ACE2", reg_result)
 plot_gene_age("ACE2", reg_result)

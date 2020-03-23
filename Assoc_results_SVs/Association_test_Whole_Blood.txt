@@ -1,0 +1,5 @@
+"coefficient"	"p-value"	"median_TPM"	"Variable"	"Gene"	"Tissue"
+0	-1	0	"AGE"	"ACE2"	"Whole Blood"
+0	-1	0	"SEX"	"ACE2"	"Whole Blood"
+0	-1	0	"AGE"	"TMPRSS2"	"Whole Blood"
+0	-1	0	"SEX"	"TMPRSS2"	"Whole Blood"

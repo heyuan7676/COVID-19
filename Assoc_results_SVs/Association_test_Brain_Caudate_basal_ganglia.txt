@@ -1,0 +1,5 @@
+"coefficient"	"p-value"	"median_TPM"	"Variable"	"Gene"	"Tissue"
+0.440850800961136	0.659847112256764	0.0415111129593234	"AGE"	"ACE2"	"Brain - Caudate (basal ganglia)"
+0.8120711323452	0.417817535744123	0.0415111129593234	"SEX"	"ACE2"	"Brain - Caudate (basal ganglia)"
+0	-1	0	"AGE"	"TMPRSS2"	"Brain - Caudate (basal ganglia)"
+0	-1	0	"SEX"	"TMPRSS2"	"Brain - Caudate (basal ganglia)"

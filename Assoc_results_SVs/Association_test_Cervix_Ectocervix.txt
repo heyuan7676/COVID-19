@@ -1,0 +1,5 @@
+"coefficient"	"p-value"	"median_TPM"	"Variable"	"Gene"	"Tissue"
+0.994184531722438	0.358520588317465	0.167937312700578	"AGE"	"ACE2"	"Cervix - Ectocervix"
+0	-1	0	"SEX"	"ACE2"	"Cervix - Ectocervix"
+-5.7989351295972	0.00115254477089828	0.0628075331721593	"AGE"	"TMPRSS2"	"Cervix - Ectocervix"
+0	-1	0	"SEX"	"TMPRSS2"	"Cervix - Ectocervix"

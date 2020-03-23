@@ -1,0 +1,5 @@
+"coefficient"	"p-value"	"median_TPM"	"Variable"	"Gene"	"Tissue"
+3.01294427519193	0.00322978359547099	0.218824238677402	"AGE"	"ACE2"	"Uterus"
+0	-1	0	"SEX"	"ACE2"	"Uterus"
+-1.0249323473444	0.307706667315468	0.0421027680373025	"AGE"	"TMPRSS2"	"Uterus"
+0	-1	0	"SEX"	"TMPRSS2"	"Uterus"

@@ -65,7 +65,7 @@ for(i in seq(1, nrow(collect_result))){
     scale_fill_brewer(palette = color_p)
   
   tis =  gsub(" ", "_", gsub('\\)', '', gsub(' \\(', '_', gsub(' - ', '_', as.character(rowi['Tissue'])))))
-  png(paste0(outdir, rowi['Gene'], '_',tis,'_',as.character(rowi['Variable']),'.png'), 
+  png(paste0(outdir, rowi['Gene'], '_',tis,'_',as.character(rowi['Variable']),'_SVA.png'), 
       res = 130, height = 500, width = 600)
   print(gg)
   dev.off()
