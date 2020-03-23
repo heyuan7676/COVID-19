@@ -47,7 +47,7 @@ for(i in seq(1, nrow(collect_result))){
                              "60-69", "70-79"))
     color_p = 'Greens'
   }else{
-    x = factor(x , levels = c(2,1), labels = c("Female", "Male"))
+    x = factor(x , levels = c(1,2), labels = c("Female", "Male"))
     color_p = 'Set1'
   }
   ggtitle_text = paste0(tissue, 
