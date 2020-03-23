@@ -23,10 +23,9 @@ collect_result$FDR = p.adjust(collect_result$p.value, method = 'BH')
 collect_result = collect_result[,c("Tissue", "Gene", "Variable",
                                    "median_TPM", "coefficient", "p.value", "FDR")]
 collect_result = collect_result[order(collect_result$p.value), ]
-write.table(collect_result, paste0(outdir, 'associations_SVA.csv'),sep = ',',row.names = F)
+write.table(collect_result, paste0(outdir, 'gene_cov_correlations_SVA.csv'),sep = ',',row.names = F)
 
 collect_result = collect_result[collect_result$FDR < 0.05, ]
-write.table(collect_result, paste0(outdir, 'significant_associations.txt'), sep='\t', row.names = F)
 
 # plot
 for(i in seq(1, nrow(collect_result))){

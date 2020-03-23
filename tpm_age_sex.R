@@ -211,10 +211,10 @@ reg_result$FDR = p.adjust(reg_result$pvalue, method = 'BH')
 
 reg_result = reg_result[order(reg_result$pvalue), ]
 
-write.table(reg_result, paste0(outdir, 'gene_cov_correlations.csv'), sep=',', row.names = F)
+write.table(reg_result, paste0(outdir, 'gene_cov_correlations_LR.csv'), sep=',', row.names = F)
 
 #### Plot
-reg_result = read.table(paste0(outdir, 'gene_cov_correlations.csv'), sep=',',header = T,stringsAsFactors = F)
+reg_result = read.table(paste0(outdir, 'gene_cov_correlations_LR.csv'), sep=',',header = T,stringsAsFactors = F)
 reg_result = reg_result[reg_result$FDR < 0.1, ]
 
 plot_gene_sex("ACE2", reg_result)
