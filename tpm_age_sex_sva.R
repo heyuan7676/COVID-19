@@ -41,40 +41,40 @@ test_association <- function(tissue){
 
   # ACE2
   if('ENSG00000130234.10' %in% rownames(gene_tpm_in_the_tissue)){
-	ace2 = gene_tpm_in_the_tissue['ENSG00000130234.10',]
-  	fitsv = lm(t(ace2)~as.matrix(cov))
-  	coef = summary(fitsv)$coefficients[2, 3]
-  	pvalue = summary(fitsv)$coefficients[2, 4]
-  	ace2_result = c(coef, pvalue, median(as.numeric(ace2)))
-  	# save
-  	control_model = lm(t(ace2)~as.matrix(cov)[,2:ncol(cov)])
-  	save_df = cbind(save_df, control_model$residuals)
-	save_df_cols = c(save_df_cols, 'ACE2_AGE')
+    ace2 = gene_tpm_in_the_tissue['ENSG00000130234.10',]
+    fitsv = lm(t(ace2)~as.matrix(cov))
+    coef = summary(fitsv)$coefficients[2, 3]
+    pvalue = summary(fitsv)$coefficients[2, 4]
+    ace2_result = c(coef, pvalue, median(as.numeric(ace2)))
+    # save
+    control_model = lm(t(ace2)~as.matrix(cov)[,2:ncol(cov)])
+    save_df = cbind(save_df, control_model$residuals)
+    save_df_cols = c(save_df_cols, 'ACE2_AGE')
   }else{
-	ace2_result = c(0, -1, 0)
+    ace2_result = c(0, -1, 0)
   }
   
   # TMPRSS2
   if('ENSG00000184012.11' %in% rownames(gene_tpm_in_the_tissue)){
-  	TMPRSS2 = gene_tpm_in_the_tissue['ENSG00000184012.11', ]
-  	fitsv = lm(t(TMPRSS2)~as.matrix(cov))
-  	coef = summary(fitsv)$coefficients[2, 3]
-  	pvalue = summary(fitsv)$coefficients[2, 4]
-  	TMPRSS2_result = c(coef, pvalue, median(as.numeric(TMPRSS2)))
-  	# save
-  	control_model = lm(t(TMPRSS2)~as.matrix(cov)[,2:ncol(cov)])
-  	save_df = cbind(save_df, control_model$residuals)
+    TMPRSS2 = gene_tpm_in_the_tissue['ENSG00000184012.11', ]
+    fitsv = lm(t(TMPRSS2)~as.matrix(cov))
+    coef = summary(fitsv)$coefficients[2, 3]
+    pvalue = summary(fitsv)$coefficients[2, 4]
+    TMPRSS2_result = c(coef, pvalue, median(as.numeric(TMPRSS2)))
+    # save
+    control_model = lm(t(TMPRSS2)~as.matrix(cov)[,2:ncol(cov)])
+    save_df = cbind(save_df, control_model$residuals)
         save_df_cols = c(save_df_cols, 'TMPRSS2_AGE')
   }else{
-	TMPRSS2_result = c(0, -1, 0)
+    TMPRSS2_result = c(0, -1, 0)
   }
   
 
   ### Test association with SEX
   if(length(table(sample_in_the_tissue$SEX)) == 1){
-	ace2_result = rbind(ace2_result, c(0, -1, 0))
-	TMPRSS2_result = rbind(TMPRSS2_result, c(0, -1, 0))
-  }else{	 
+    ace2_result = rbind(ace2_result, c(0, -1, 0))
+    TMPRSS2_result = rbind(TMPRSS2_result, c(0, -1, 0))
+  }else{     
 
  
   ## keep SEX when estimating SVs
@@ -91,33 +91,33 @@ test_association <- function(tissue){
   ## fit linear model
   # ACE2
   if('ENSG00000130234.10' %in% rownames(gene_tpm_in_the_tissue)){
-  	ace2 = gene_tpm_in_the_tissue['ENSG00000130234.10',]
-  	fitsv = lm(t(ace2)~as.matrix(cov))
-  	coef = summary(fitsv)$coefficients[2, 3]
-  	pvalue = summary(fitsv)$coefficients[2, 4]
-  	ace2_result = rbind(ace2_result, c(coef, pvalue, median(as.numeric(ace2))))
-  	# save
-  	control_model = lm(t(ace2)~as.matrix(cov)[,2:ncol(cov)])
-  	save_df = cbind(save_df, control_model$residuals)
+    ace2 = gene_tpm_in_the_tissue['ENSG00000130234.10',]
+    fitsv = lm(t(ace2)~as.matrix(cov))
+    coef = summary(fitsv)$coefficients[2, 3]
+    pvalue = summary(fitsv)$coefficients[2, 4]
+    ace2_result = rbind(ace2_result, c(coef, pvalue, median(as.numeric(ace2))))
+    # save
+    control_model = lm(t(ace2)~as.matrix(cov)[,2:ncol(cov)])
+    save_df = cbind(save_df, control_model$residuals)
         save_df_cols = c(save_df_cols, 'ACE2_SEX')
   }else{
-	ace2_result = rbind(ace2_result, c(0, -1, 0))
+    ace2_result = rbind(ace2_result, c(0, -1, 0))
   }
 
   
   # TMPRSS2
   if('ENSG00000184012.11' %in% rownames(gene_tpm_in_the_tissue)){
-  	TMPRSS2 = gene_tpm_in_the_tissue['ENSG00000184012.11',]
-  	fitsv = lm(t(TMPRSS2)~as.matrix(cov))
-  	coef = summary(fitsv)$coefficients[2, 3]
-  	pvalue = summary(fitsv)$coefficients[2, 4]
-  	TMPRSS2_result = rbind(TMPRSS2_result, c(coef, pvalue, median(as.numeric(TMPRSS2))))
-  	# save
-  	control_model = lm(t(TMPRSS2)~as.matrix(cov)[,2:ncol(cov)])
-  	save_df = cbind(save_df, control_model$residuals)
+    TMPRSS2 = gene_tpm_in_the_tissue['ENSG00000184012.11',]
+    fitsv = lm(t(TMPRSS2)~as.matrix(cov))
+    coef = summary(fitsv)$coefficients[2, 3]
+    pvalue = summary(fitsv)$coefficients[2, 4]
+    TMPRSS2_result = rbind(TMPRSS2_result, c(coef, pvalue, median(as.numeric(TMPRSS2))))
+    # save
+    control_model = lm(t(TMPRSS2)~as.matrix(cov)[,2:ncol(cov)])
+    save_df = cbind(save_df, control_model$residuals)
         save_df_cols = c(save_df_cols, 'TMPRSS2_SEX')
   }else{
-	TMPRSS2_result = rbind(TMPRSS2_result, c(0, -1, 0))
+    TMPRSS2_result = rbind(TMPRSS2_result, c(0, -1, 0))
   }
   }
 
@@ -149,8 +149,3 @@ tissue_idx = as.numeric(args[1])
 tissue = sort(unique(samples$SMTSD))[tissue_idx]
 print(tissue)
 tis_df = test_association(tissue)
-
-
-
-
-

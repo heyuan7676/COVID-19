@@ -8,11 +8,13 @@ for (tissue in sort(unique(samples$SMTSD))){
   sample_in_the_tissue = samples %>% filter(SMTSD == tissue)
   # restrict to the samples used in GTEx
   tis = gsub(" ", "_", gsub('\\)', '', gsub(' \\(', '_', gsub(' - ', '_', tissue))))
-  genotype_PCs  = try(read.table(paste0(datadir, 'GTEx_Analysis_v8_eQTL_covariates/',tis,'.v8.covariates.txt'),
-                                 sep='\t', header = T, stringsAsFactors = F, row.names = 1))
-  if(inherits(genotype_PCs, "try-error")){
+   genotype_PCs  = tryCatch(read.table(paste0(datadir, 'GTEx_Analysis_v8_eQTL_covariates/',tis,'.v8.covariates.txt'),
+                                 sep='\t', header = T, stringsAsFactors = F, row.names = 1), warning = function (w) {print(paste("No data available for tissue type", tis))}, error = function(f) {return("failed")})
+  if(inherits(genotype_PCs, "character")){
+    print(paste(" ", "Skipping tissue", tis))
     next
   }
+
   samples_used = gsub("\\.", "-", colnames(genotype_PCs))
   sample_in_the_tissue = sample_in_the_tissue %>% filter(SUBJID %in% samples_used) 
 
@@ -26,7 +28,3 @@ for (tissue in sort(unique(samples$SMTSD))){
               sep='\t')
   rm(gene_tpm_in_the_tissue)
 }
-
-
-
-
