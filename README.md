@@ -18,7 +18,7 @@ Approach I: Perform SVA to learn about the SVs, and test asscoations with AGE an
 
 
 Approach II: Test asscoations with AGE and SEX controlling for known confounders <br/>
-`Rscript LR_confounders.R ENSG00000130234.10`
+`Rscript LR_confounders.R ENSG00000130234.10` <br/>
 `Rscript LR_confounders.R ENSG00000184012.11`
 
 
