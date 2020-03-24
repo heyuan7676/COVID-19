@@ -22,15 +22,9 @@ Pipeline:<br/>
 `Rscript SVA_compute_SV.R`<br/>
 `Rscript SVA_followedby_LR.R ENSG00000130234.10`<br/>
 `Rscript SVA_followedby_LR.R ENSG00000184012.11`<br/>
-<<<<<<< HEAD
-
-
-Test asscoations with AGE and SEX controlling for known confounders <br/>
-=======
 
 
 Approach II: Test asscoations with AGE and SEX controlling for known confounders <br/>
->>>>>>> Update
 `Rscript LR_confounders.R`
 
 * DTHHRDY  - Death Circumstances<br/>
