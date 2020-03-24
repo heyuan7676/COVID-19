@@ -1,5 +1,0 @@
-"coefficient"	"p-value"	"median_TPM"	"Variable"	"Gene"	"Tissue"
-0.0997518195983082	0.920718114932607	0.0494893287104852	"AGE"	"ACE2"	"Brain - Spinal cord (cervical c-1)"
-0.666042541515946	0.506741341912448	0.0494893287104852	"SEX"	"ACE2"	"Brain - Spinal cord (cervical c-1)"
-0	-1	0	"AGE"	"TMPRSS2"	"Brain - Spinal cord (cervical c-1)"
-0	-1	0	"SEX"	"TMPRSS2"	"Brain - Spinal cord (cervical c-1)"

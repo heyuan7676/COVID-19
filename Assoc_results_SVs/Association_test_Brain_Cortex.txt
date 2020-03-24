@@ -1,5 +1,0 @@
-"coefficient"	"p-value"	"median_TPM"	"Variable"	"Gene"	"Tissue"
-0.122660959119444	0.902507305371365	0.0301623741113984	"AGE"	"ACE2"	"Brain - Cortex"
--0.513058027317845	0.608513079279585	0.0301623741113984	"SEX"	"ACE2"	"Brain - Cortex"
-0	-1	0	"AGE"	"TMPRSS2"	"Brain - Cortex"
-0	-1	0	"SEX"	"TMPRSS2"	"Brain - Cortex"

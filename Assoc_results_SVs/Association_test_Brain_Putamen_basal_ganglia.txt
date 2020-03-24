@@ -1,5 +1,0 @@
-"coefficient"	"p-value"	"median_TPM"	"Variable"	"Gene"	"Tissue"
-0.972982734149506	0.332049113499275	0.0248199805897355	"AGE"	"ACE2"	"Brain - Putamen (basal ganglia)"
-0.635824805452508	0.525810508813914	0.0248199805897355	"SEX"	"ACE2"	"Brain - Putamen (basal ganglia)"
-0	-1	0	"AGE"	"TMPRSS2"	"Brain - Putamen (basal ganglia)"
-0	-1	0	"SEX"	"TMPRSS2"	"Brain - Putamen (basal ganglia)"

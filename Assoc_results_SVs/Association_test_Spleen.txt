@@ -1,5 +1,0 @@
-"coefficient"	"p-value"	"median_TPM"	"Variable"	"Gene"	"Tissue"
-0	-1	0	"AGE"	"ACE2"	"Spleen"
-0	-1	0	"SEX"	"ACE2"	"Spleen"
--0.561116143733528	0.575343375851465	0.032284249477788	"AGE"	"TMPRSS2"	"Spleen"
--0.541255043206543	0.588931188558709	0.032284249477788	"SEX"	"TMPRSS2"	"Spleen"

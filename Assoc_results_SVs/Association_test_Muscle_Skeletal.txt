@@ -1,5 +1,0 @@
-"coefficient"	"p-value"	"median_TPM"	"Variable"	"Gene"	"Tissue"
-0.770861772583416	0.441063897797674	0.0828209702907826	"AGE"	"ACE2"	"Muscle - Skeletal"
--2.64221964101605	0.00843082739277445	0.0828209702907826	"SEX"	"ACE2"	"Muscle - Skeletal"
-0	-1	0	"AGE"	"TMPRSS2"	"Muscle - Skeletal"
-0	-1	0	"SEX"	"TMPRSS2"	"Muscle - Skeletal"

@@ -1,5 +1,0 @@
-"coefficient"	"p-value"	"median_TPM"	"Variable"	"Gene"	"Tissue"
-1.1167060915636	0.265773540539377	1.48819103991886	"AGE"	"ACE2"	"Small Intestine - Terminal Ileum"
--0.36837236469294	0.713076520145132	1.48819103991886	"SEX"	"ACE2"	"Small Intestine - Terminal Ileum"
-0.610932545757288	0.542100470774138	1.63950716396957	"AGE"	"TMPRSS2"	"Small Intestine - Terminal Ileum"
-1.90442236041187	0.0586275819837374	1.63950716396957	"SEX"	"TMPRSS2"	"Small Intestine - Terminal Ileum"

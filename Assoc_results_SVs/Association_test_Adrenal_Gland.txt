@@ -1,5 +1,0 @@
-"coefficient"	"p-value"	"median_TPM"	"Variable"	"Gene"	"Tissue"
-3.39072060476162	0.000832061479250179	0.21505564736031	"AGE"	"ACE2"	"Adrenal Gland"
--1.97671372574394	0.0493764509760928	0.21505564736031	"SEX"	"ACE2"	"Adrenal Gland"
-0	-1	0	"AGE"	"TMPRSS2"	"Adrenal Gland"
-0	-1	0	"SEX"	"TMPRSS2"	"Adrenal Gland"

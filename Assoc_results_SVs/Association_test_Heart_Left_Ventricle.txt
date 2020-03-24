@@ -1,5 +1,0 @@
-"coefficient"	"p-value"	"median_TPM"	"Variable"	"Gene"	"Tissue"
--1.09916898110165	0.272412932730649	0.951159084143135	"AGE"	"ACE2"	"Heart - Left Ventricle"
-2.56267576314894	0.0107829077422746	0.951159084143135	"SEX"	"ACE2"	"Heart - Left Ventricle"
-0	-1	0	"AGE"	"TMPRSS2"	"Heart - Left Ventricle"
-0	-1	0	"SEX"	"TMPRSS2"	"Heart - Left Ventricle"

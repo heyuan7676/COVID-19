@@ -1,5 +1,0 @@
-"coefficient"	"p-value"	"median_TPM"	"Variable"	"Gene"	"Tissue"
-0.610144714516481	0.542637003783425	0.0362694957428153	"AGE"	"ACE2"	"Brain - Cerebellar Hemisphere"
--0.328124599400815	0.743249150106619	0.0362694957428153	"SEX"	"ACE2"	"Brain - Cerebellar Hemisphere"
-0	-1	0	"AGE"	"TMPRSS2"	"Brain - Cerebellar Hemisphere"
-0	-1	0	"SEX"	"TMPRSS2"	"Brain - Cerebellar Hemisphere"

@@ -1,5 +1,0 @@
-"coefficient"	"p-value"	"median_TPM"	"Variable"	"Gene"	"Tissue"
-1.20704475960619	0.228244238932154	0.82180816759213	"AGE"	"ACE2"	"Heart - Atrial Appendage"
-1.00930792896671	0.313536378999573	0.82180816759213	"SEX"	"ACE2"	"Heart - Atrial Appendage"
-0	-1	0	"AGE"	"TMPRSS2"	"Heart - Atrial Appendage"
-0	-1	0	"SEX"	"TMPRSS2"	"Heart - Atrial Appendage"

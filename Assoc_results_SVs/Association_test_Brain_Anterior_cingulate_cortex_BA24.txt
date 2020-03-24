@@ -1,5 +1,0 @@
-"coefficient"	"p-value"	"median_TPM"	"Variable"	"Gene"	"Tissue"
--0.543294367969262	0.587823106790417	0.0246416244790427	"AGE"	"ACE2"	"Brain - Anterior cingulate cortex (BA24)"
--1.40944594890593	0.161002794700968	0.0246416244790427	"SEX"	"ACE2"	"Brain - Anterior cingulate cortex (BA24)"
-0	-1	0	"AGE"	"TMPRSS2"	"Brain - Anterior cingulate cortex (BA24)"
-0	-1	0	"SEX"	"TMPRSS2"	"Brain - Anterior cingulate cortex (BA24)"

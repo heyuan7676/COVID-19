@@ -1,5 +1,0 @@
-"coefficient"	"p-value"	"median_TPM"	"Variable"	"Gene"	"Tissue"
--0.872929648173668	0.383993469417837	0.0310204559033761	"AGE"	"ACE2"	"Brain - Frontal Cortex (BA9)"
-0.285917929965147	0.775306257504649	0.0310204559033761	"SEX"	"ACE2"	"Brain - Frontal Cortex (BA9)"
-0	-1	0	"AGE"	"TMPRSS2"	"Brain - Frontal Cortex (BA9)"
-0	-1	0	"SEX"	"TMPRSS2"	"Brain - Frontal Cortex (BA9)"

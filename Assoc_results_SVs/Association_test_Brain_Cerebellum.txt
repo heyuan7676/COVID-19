@@ -1,5 +1,0 @@
-"coefficient"	"p-value"	"median_TPM"	"Variable"	"Gene"	"Tissue"
-0.339064825163428	0.734937323614218	0.0363094437244379	"AGE"	"ACE2"	"Brain - Cerebellum"
--0.773029951893439	0.440470355400221	0.0363094437244379	"SEX"	"ACE2"	"Brain - Cerebellum"
-0	-1	0	"AGE"	"TMPRSS2"	"Brain - Cerebellum"
-0	-1	0	"SEX"	"TMPRSS2"	"Brain - Cerebellum"

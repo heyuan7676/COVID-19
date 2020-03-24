@@ -1,5 +1,0 @@
-"coefficient"	"p-value"	"median_TPM"	"Variable"	"Gene"	"Tissue"
-4.28080278998698	2.51113961424798e-05	0.249919023962072	"AGE"	"ACE2"	"Esophagus - Gastroesophageal Junction"
--3.89911708212887	0.000119247557380833	0.249919023962072	"SEX"	"ACE2"	"Esophagus - Gastroesophageal Junction"
--1.47552607823952	0.14112341875324	0.0423982824236807	"AGE"	"TMPRSS2"	"Esophagus - Gastroesophageal Junction"
--1.95597630667121	0.0513988628076311	0.0423982824236807	"SEX"	"TMPRSS2"	"Esophagus - Gastroesophageal Junction"

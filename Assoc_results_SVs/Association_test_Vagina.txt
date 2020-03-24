@@ -1,5 +1,0 @@
-"coefficient"	"p-value"	"median_TPM"	"Variable"	"Gene"	"Tissue"
-0.486168753222745	0.627691997393856	0.45484486000851	"AGE"	"ACE2"	"Vagina"
-0	-1	0	"SEX"	"ACE2"	"Vagina"
--3.07331952768909	0.00259528717304715	0.734799829588847	"AGE"	"TMPRSS2"	"Vagina"
-0	-1	0	"SEX"	"TMPRSS2"	"Vagina"

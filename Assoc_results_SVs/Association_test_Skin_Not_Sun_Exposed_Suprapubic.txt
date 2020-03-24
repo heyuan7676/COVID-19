@@ -1,5 +1,0 @@
-"coefficient"	"p-value"	"median_TPM"	"Variable"	"Gene"	"Tissue"
-0.53220920747942	0.594824821214631	0.162624140307846	"AGE"	"ACE2"	"Skin - Not Sun Exposed (Suprapubic)"
--0.725703809564061	0.468369673105695	0.162624140307846	"SEX"	"ACE2"	"Skin - Not Sun Exposed (Suprapubic)"
-3.26557593547698	0.0011697086151352	0.75724415102197	"AGE"	"TMPRSS2"	"Skin - Not Sun Exposed (Suprapubic)"
--2.9245246372	0.00361100676525918	0.75724415102197	"SEX"	"TMPRSS2"	"Skin - Not Sun Exposed (Suprapubic)"

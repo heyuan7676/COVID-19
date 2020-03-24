@@ -1,5 +1,0 @@
-"coefficient"	"p-value"	"median_TPM"	"Variable"	"Gene"	"Tissue"
-1.02179584855866	0.309294890394272	0.0402817937902777	"AGE"	"ACE2"	"Brain - Substantia nigra"
-0.126513892365472	0.899574207042609	0.0402817937902777	"SEX"	"ACE2"	"Brain - Substantia nigra"
-0	-1	0	"AGE"	"TMPRSS2"	"Brain - Substantia nigra"
-0	-1	0	"SEX"	"TMPRSS2"	"Brain - Substantia nigra"
