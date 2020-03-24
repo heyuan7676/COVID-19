@@ -142,12 +142,14 @@ plot_gene_sex <- function(Test_gene, df){
     ggtitle_text = paste0(df_for_plot$SMTSD, 
                                       ":\n coef = ", round(df_for_plot$coefficient, 3),
                                       ":\n median TPM = ", df_for_plot$Median_TPM)
+    xlabs = paste(levels(df_for_plot$Gender),"\n(N=",table(df_for_plot$Gender),")",sep="")
     g_sex = ggplot(aes(x = Gender, y = corrected_expression), data = df_for_plot) + 
       geom_boxplot(aes(fill = Gender)) + 
       ggtitle(ggtitle_text) + 
       theme_bw() + 
-      theme(axis.text.x = element_blank()) + 
+      scale_x_discrete(labels=xlabs) + 
       xlab("") + 
+      theme(legend.position = 'none') + 
       ylab(paste0("Corrected expression of ", Test_gene)) + 
       scale_fill_brewer(palette = 'Set1')
     
@@ -190,11 +192,13 @@ plot_gene_age <- function(Test_gene, df){
     ggtitle_text = paste0(df_for_plot$SMTSD, 
                                       ":\n coef = ", round(df_for_plot$coefficient, 3),
                                       ":\n median TPM = ", df_for_plot$Median_TPM) 
+    xlabs = paste(names(table(df_for_plot$AGE)),"yr\n(N=",table(df_for_plot$AGE),")",sep="")
     g_AGE = ggplot(aes(x = AGE, y = corrected_expression), data = df_for_plot) + 
       geom_boxplot(aes(fill = AGE)) + 
       ggtitle(ggtitle_text) + 
       theme_bw() + 
-      theme(axis.text.x = element_blank()) + 
+      theme(legend.position = 'none') + 
+      scale_x_discrete(labels=xlabs) + 
       xlab("") + 
       ylab(paste0("Corrected expression of ", Test_gene)) + 
       scale_fill_brewer(palette = 'Greens')
@@ -217,6 +221,8 @@ Test_gene = args[1]
 reg_result = check_Test_gene_LR(Test_gene)
 
 #### Plot
+#reg_result = read.table(paste0(outdir, 'Association_tests_',Test_gene, '_LR.csv'),
+#                        sep= ',', header = T, stringsAsFactors = F)
 sig = reg_result[reg_result$FDR < 0.1, ]
 plot_gene_sex(Test_gene, sig)
 plot_gene_age(Test_gene, sig)

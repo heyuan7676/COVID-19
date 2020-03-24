@@ -129,7 +129,8 @@ plot_one_row <- function(rowi){
   }
   y = corrected_df[, paste('SVA', rowi['Variable'], sep = '_')]
   x = corrected_df[, as.character(rowi['Variable'])]
-  if(as.character(rowi['Variable']) == 'AGE'){
+  variable = as.character(rowi['Variable'])
+  if(variable == 'AGE'){
     x = factor(x, levels = c("20-29", "30-39", "40-49", "50-59",
                              "60-69", "70-79"))
     color_p = 'Greens'
@@ -141,14 +142,21 @@ plot_one_row <- function(rowi){
                         ':\n coef = ', round(rowi$coefficient,3),
                         ':\n median TPM = ', round(rowi$median_TPM, 3))
   df_for_plot = data.frame("Covariate"=x, "y"=y)
+  
+  if(variable == 'AGE'){
+    xlabs = paste(levels(df_for_plot$Covariate),"yr\n(N=",table(df_for_plot$Covariate),")",sep="")
+  }else{
+    xlabs = paste(levels(df_for_plot$Covariate),"\n(N=",table(df_for_plot$Covariate),")",sep="")
+  }
   gg = ggplot(aes(x = Covariate, y = y), data = df_for_plot) +
     geom_boxplot(aes(fill = Covariate)) +
     theme_bw() +
-    theme(axis.text.x = element_blank()) +
+    scale_x_discrete(labels=xlabs) + 
     xlab("") +
     ylab(paste0("Corrected expression of ", rowi['Gene'])) +
     ggtitle(ggtitle_text) +
-    scale_fill_brewer(palette = color_p)
+    scale_fill_brewer(palette = color_p) + 
+    theme(legend.position = 'none')
   
   png(paste0(outdir, 'plots/', rowi['Gene'], '_',tissue_name,'_',as.character(rowi['Variable']),'_SVA.png'),
       res = 130, height = 500, width = 600)
@@ -165,6 +173,8 @@ Test_gene = args[1]
 reg_result = check_Test_gene_SVA(Test_gene)
 
 # plot
+#reg_result = read.table(paste0(outdir, 'Association_tests_', Test_gene,'_SVA.csv'), 
+#                        sep=',', header = T, stringsAsFactors = F)
 sig = reg_result[reg_result$FDR < 0.05, ]
 for(i in seq(1, nrow(sig))){
 	rowI = sig[i, ]
