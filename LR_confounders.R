@@ -141,7 +141,7 @@ plot_gene_sex <- function(Test_gene, df){
     
     ggtitle_text = paste0(df_for_plot$SMTSD, 
                                       ":\n coef = ", round(df_for_plot$coefficient, 3),
-                                      ":\n median TPM = ", df_for_plot$Median_TPM)
+                                      ":\n median TPM = ", round(df_for_plot$Median_TPM,3))
     xlabs = paste(levels(df_for_plot$Gender),"\n(N=",table(df_for_plot$Gender),")",sep="")
     g_sex = ggplot(aes(x = Gender, y = corrected_expression), data = df_for_plot) + 
       geom_boxplot(aes(fill = Gender)) + 
@@ -191,7 +191,7 @@ plot_gene_age <- function(Test_gene, df){
     
     ggtitle_text = paste0(df_for_plot$SMTSD, 
                                       ":\n coef = ", round(df_for_plot$coefficient, 3),
-                                      ":\n median TPM = ", df_for_plot$Median_TPM) 
+                                      ":\n median TPM = ", round(df_for_plot$Median_TPM,3))
     xlabs = paste(names(table(df_for_plot$AGE)),"yr\n(N=",table(df_for_plot$AGE),")",sep="")
     g_AGE = ggplot(aes(x = AGE, y = corrected_expression), data = df_for_plot) + 
       geom_boxplot(aes(fill = AGE)) + 
