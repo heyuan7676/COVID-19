@@ -5,12 +5,17 @@ collect_result = NULL
 for(tissue in sort(unique(samples$SMTSD))){
   tis =  gsub(" ", "_", gsub('\\)', '', gsub(' \\(', '_', gsub(' - ', '_', tissue))))
   
-  df = try(read.table(paste0(outdir, 'Assoc_results_SVs/Association_test_',tis,'.txt'), 
-                  sep='\t', header = T, stringsAsFactors = F))
-  if(inherits(df, "try-error")){
+
+  df = tryCatch(read.table(paste0(outdir, 'Assoc_results_SVs/Association_test_',tis,'.txt'), 
+                  sep='\t', header = T, stringsAsFactors = F),warning = function (w) {print(paste("No data available for tissue type", tis))}, error = function(f) {return("failed")}
+ )
+  if(inherits(df, "character")){
+    print(paste(" ", "No SVA results for ", tis))
     next
   }
-  ## remove tissues with less than 70 samples
+
+## remove tissues with less than 70 samples
+
   sample_in_the_tissue = samples %>% filter(SMTSD == tissue)
   if(nrow(sample_in_the_tissue) < 70){ next }
   collect_result = rbind(collect_result, df)
@@ -45,7 +50,7 @@ for(i in seq(1, nrow(collect_result))){
   tis =  gsub(" ", "_", gsub('\\)', '', gsub(' \\(', '_', gsub(' - ', '_', tissue))))
   
   # read in 
-  corrected_df = try(read.table(paste0(outdir, 'SVA_corrected/', tis, '_SV_removed.txt'),
+  corrected_df = try(read.table(paste0(datadir, 'SVA_corrected/', tis, '_SV_removed.txt'),
                             sep = '\t', header = T, stringsAsFactors = F))
   if(inherits(corrected_df, "try-error")){
     next
