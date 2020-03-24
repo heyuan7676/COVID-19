@@ -5,6 +5,8 @@ Script dependencies include the following R packages:
 * ggplot2
 * sva
 
+Pipeline: `bash run.sh` <br/>
+
 `download_data.sh`: download data from GTEX and Gencode for downstream analysis <br/>
 
 Approach I: Perform SVA to learn about the SVs, and test asscoations with AGE and SEX controlling for the SVs <br/>
@@ -15,17 +17,10 @@ Approach I: Perform SVA to learn about the SVs, and test asscoations with AGE an
 `SVA_followedby_LR.R`: Perform association tests controlling for SVs <br/>
 
 
-Pipeline:<br/>
-`bash download_data.sh` <br/>
-`bash extract_protein_coding_lincRNA_genes.sh`<br/>
-`Rscript generate_tissue_wise_TPM.R`<br/>
-`Rscript SVA_compute_SV.R`<br/>
-`Rscript SVA_followedby_LR.R ENSG00000130234.10`<br/>
-`Rscript SVA_followedby_LR.R ENSG00000184012.11`<br/>
-
-
 Approach II: Test asscoations with AGE and SEX controlling for known confounders <br/>
-`Rscript LR_confounders.R`
+`Rscript LR_confounders.R ENSG00000130234.10`
+`Rscript LR_confounders.R ENSG00000184012.11`
+
 
 * DTHHRDY  - Death Circumstances<br/>
 * SMRIN  - RIN number <br/>
