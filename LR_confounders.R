@@ -8,12 +8,6 @@ source("utils.R")
 ##Each row is the test for one gene in one tissue, for either AGE or SEX
 ###
 
-readin_gene_tpm <- function(){
-  df = fread(paste0(datadir, 'gene_tpm.gct'))
-  df.t = transpose(df)
-  df.t$sampleID = colnames(df)
-  return(df.t)
-}
 
 #Returns table of TPM and covariates for patients with given tissue type
 readin_data_in_tissue <- function(tissue, Test_gene){
