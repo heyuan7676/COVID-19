@@ -127,7 +127,7 @@ test_association <- function(tissue){
 
   save_df = as.data.frame(save_df)
   colnames(save_df) = save_df_cols 
-  write.table(save_df, paste0(datadir, 'SVA_corrected/', tis, '_SV_removed.txt'), sep = '\t')
+  write.table(save_df, paste0(datadir, 'SVA_corrected/', tis, '_SV_removed.txt'), sep = '\t', quote = FALSE)
 
  
   result = as.data.frame(rbind(ace2_result, TMPRSS2_result))
@@ -136,8 +136,9 @@ test_association <- function(tissue){
   result$Gene = c("ACE2", "ACE2", "TMPRSS2", "TMPRSS2")
   result$Tissue = tissue
 
-  write.table(result, paste0(outdir, 'Assoc_results_SVs/Association_test_',tis,'.txt'), sep='\t', row.names=F)
-
+ dir.create(file.path(outdir, "Assoc_results_SVs"), showWarnings = FALSE)
+ 
+    write.table(result, paste0(outdir, 'Assoc_results_SVs/Association_test_',tis,'.txt'), sep='\t', row.names=F, quote = FALSE)
 
   return(result)
 }

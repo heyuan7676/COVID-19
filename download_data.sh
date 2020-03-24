@@ -1,3 +1,5 @@
+#!/bin/bash
+set -e
 #Download the data from GTEX:
 #TPM data
 wget https://storage.googleapis.com/gtex_analysis_v8/rna_seq_data/GTEx_Analysis_2017-06-05_v8_RNASeQCv1.1.9_gene_tpm.gct.gz
@@ -26,10 +28,9 @@ awk '(!/^#/) {print $10,$14,$16}'  gencode.v26.annotation.gtf | sed 's/[";]//g' 
 #Set up directories
 mkdir -p GTEx_data
 mkdir -p GTEx_data/tissue_tpm #Used by generate_tissue_wise_TPM.R and tpm_age_sex_sva.R
+mkdir -p GTEx_data/SVA_corrected
 mv *.gct GTEx_data
 mv *.txt GTEx_data
 mv GTEx_Analysis_v8_eQTL_covariates ./GTEx_data/
-mv GTEx_Analysis_v8_eQTL_expression_matrices GTEx_data/
-mv gencode.v26.annotation.gtf GTEx_data/gencode.v26.annotation.txt
 
 mkdir -p results
