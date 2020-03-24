@@ -13,11 +13,11 @@ estimate_SVs <- function(tissue){
   print(paste0('Tissue: ', tis))  
   # gene TPM
   gene_tpm_in_the_tissue = tryCatch(read.table(paste0(datadir, 'tissue_tpm/', tis, '_gene_TPM.txt'),
-									sep = '\t', header = T, stringsAsFactors = F, row.names = 1), 
-									warning = function (w) {print(paste("No data available for tissue type", tis))}, error = function(f) {return("failed")})
+                                      sep = '\t', header = T, stringsAsFactors = F, row.names = 1), 
+			   warning = function (w) {print(paste("No data available for tissue type", tis))}, error = function(f) {return("failed")})
   if(inherits(gene_tpm_in_the_tissue, "character")){
-	print(paste(" ", "Skipping tissue", tis))
-	return()
+    print(paste(" ", "Skipping tissue", tis))
+    return()
   }
   gene_tpm_in_the_tissue = gene_tpm_in_the_tissue[apply(gene_tpm_in_the_tissue, 1, function(x) sum(x>0.1)) > 0.2 * ncol(gene_tpm_in_the_tissue),]
   gene_tpm_in_the_tissue = log10(gene_tpm_in_the_tissue + 1)
@@ -65,6 +65,8 @@ estimate_SVs <- function(tissue){
 
 ## Among these, samples were selected based on donor genotype
 ## availability and a threshold of at least 70 samples per tissue
-for (tissue in sort(unique(samples$SMTSD))){
-	estimate_SVs(tissue)
-}
+
+args <- commandArgs(TRUE)
+tissue_idx=as.numeric(args[1])
+tissue = sort(unique(samples$SMTSD))[tissue_idx]
+estimate_SVs(tissue)

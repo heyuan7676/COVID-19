@@ -1,5 +1,6 @@
 source("utils.R")
 
+dir.create(file.path(datadir, "tissue_tpm/"), showWarnings = FALSE)
 tpm.whole = fread(paste0(datadir, 'gene_pc_lc_tpm.txt'))
 
 for (tissue in sort(unique(samples$SMTSD))){
