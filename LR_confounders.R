@@ -36,7 +36,7 @@ readin_data_in_tissue <- function(tissue){
   
   # gene TPM
   gene_tpm_in_the_tissue = gene_tpm.t %>% filter(sampleID %in% sample_in_the_tissue$SAMPID)
-  colnames(gene_tpm_in_the_tissue) = c("ACE2", "TMPRSS2", "SAMPID")
+  colnames(gene_tpm_in_the_tissue) = c("ENSG00000130234.10", "ENSG00000184012.11", "SAMPID")
   
   # merge
   df_test = merge(sample_in_the_tissue, gene_tpm_in_the_tissue, by = 'SAMPID')
@@ -207,8 +207,8 @@ plot_gene_age <- function(geneI, df){
 }
 
 gene_tpm.t <- readin_gene_tpm()
-ACE2_result = check_geneI("ACE2")
-TMPRSS2_result = check_geneI("TMPRSS2")
+ACE2_result = check_geneI("ENSG00000130234.10")
+TMPRSS2_result = check_geneI("ENSG00000184012.11")
 
 reg_result = rbind(ACE2_result, TMPRSS2_result)
 reg_result$Median_TPM = as.numeric(as.character(reg_result$Median_TPM))
@@ -222,8 +222,8 @@ write.table(reg_result, paste0(outdir, 'gene_cov_correlations_LR.csv'), sep=',',
 reg_result$Tissue = as.character(reg_result$Tissue)
 reg_result = reg_result[reg_result$FDR < 0.1, ]
 
-plot_gene_sex("ACE2", reg_result)
-plot_gene_age("ACE2", reg_result)
-plot_gene_sex("TMPRSS2", reg_result)
-plot_gene_age("TMPRSS2", reg_result)
+plot_gene_sex("ENSG00000130234.10", reg_result)
+plot_gene_age("ENSG00000130234.10", reg_result)
+plot_gene_sex("ENSG00000184012.11", reg_result)
+plot_gene_age("ENSG00000184012.11", reg_result)
 

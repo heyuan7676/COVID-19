@@ -7,7 +7,7 @@ Script dependencies include the following R packages:
 
 `download_data.sh`: download data from GTEX and Gencode for downstream analysis <br/>
 
-Perform SVA to learn about the SVs, and test asscoations with AGE and SEX controlling for the SVs <br/>
+Approach I: Perform SVA to learn about the SVs, and test asscoations with AGE and SEX controlling for the SVs <br/>
 
 `extract_protein_coding_lincRNA_genes.sh`: Extract genes that are protein coding or lincRNA <br/>
 `generate_tissue_wise_TPM.R`: Generate a matrix of genes by samples for each tissue <br/>
@@ -22,13 +22,18 @@ Pipeline:<br/>
 `Rscript SVA_compute_SV.R`<br/>
 `Rscript SVA_followedby_LR.R ENSG00000130234.10`<br/>
 `Rscript SVA_followedby_LR.R ENSG00000184012.11`<br/>
+<<<<<<< HEAD
 
 
 Test asscoations with AGE and SEX controlling for known confounders <br/>
+=======
+
+
+Approach II: Test asscoations with AGE and SEX controlling for known confounders <br/>
+>>>>>>> Update
 `Rscript LR_confounders.R`
 
 * DTHHRDY  - Death Circumstances<br/>
 * SMRIN  - RIN number <br/>
 * SMTSISCH - Total Ischemic time <br/>
 * SMEXNCRT - Exonic Rate <br/>
-                 

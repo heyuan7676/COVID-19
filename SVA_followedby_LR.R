@@ -34,6 +34,7 @@ test_association <- function(tissue){
   ### 1. Test association with AGE_GROUP
   ## fit linear model
   if(Test_gene %in% rownames(gene_tpm_in_the_tissue)){
+    print(paste0('Perform LR using SVs for ', tissue))
     gene_y = gene_tpm_in_the_tissue[Test_gene,]
     # AGE
     cov = read.table(paste0(datadir, 'SVs/', tissue_name, '_SVs_AGE.txt'), sep = '\t', header = T)
@@ -43,7 +44,8 @@ test_association <- function(tissue){
     pvalue = summary(fitsv)$coefficients['covAGE_GROUP', 4]
     result_tested_gene = c(coef, pvalue, median(as.numeric(gene_y)))
     # save
-    control_model = lm(t(gene_y)~as.matrix(cov)[,2:ncol(cov)])
+    sv_cols = paste0("SV", seq(1, ncol(cov)-1))
+    control_model = lm(t(gene_y)~as.matrix(cov)[,sv_cols])
     save_df = cbind(save_df, control_model$residuals)
     save_df_cols = c(save_df_cols, 'SVA_AGE')
  
@@ -90,11 +92,12 @@ run_all_tissues <- function(Test_gene){
   dir.create(file.path(datadir, "SVA_corrected/", Test_gene, '/'), showWarnings = FALSE)
   result = data.frame()
   for(tissue in sort(unique(samples$SMTSD))){
-    print(tissue)
     result_tested_gene = tryCatch(test_association(tissue), warning = function (w) {print(paste("No data available for tissue type", tis))},
-                                  error = function(f) {return()})
-    if(! is.null(result_tested_gene)){
+                                  error = function(f) {return("failed")})
+    if(!inherits(result_tested_gene, "character")){
       result = rbind(result, result_tested_gene)
+    }else{
+      print(paste0("Skipping ", tissue))
     }
   }
   
@@ -106,8 +109,9 @@ run_all_tissues <- function(Test_gene){
   result = result[result$median_TPM > 1, ]
   
   ## compute FDR for each gene seperately
-  result$FDR = p.adjust(result[,"p-value"], method = 'BH')
+  result$FDR = p.adjust(result$"p-value", method = 'BH')
   result = result[,c("Tissue", "Gene", "Variable", "median_TPM", "coefficient", "p-value", "FDR")]
+  result = result[order(result$"p-value"), ]
   write.table(result, paste0(outdir, 'Assoc_results_SVA/Association_tests_', Test_gene,'.csv'), sep=',', row.names=F, quote = FALSE)
 }
 
@@ -162,7 +166,8 @@ run_all_tissues(Test_gene)
 
 result = read.table(paste0(outdir, 'Assoc_results_SVA/Association_tests_', Test_gene,'.csv'), 
                     sep=',', header=T, stringsAsFactors = F)
-for(i in seq(1, sum(result$FDR < 0.05))){
+result = result[result$FDR < 0.05, ]
+for(i in seq(1, nrow(result))){
 	rowI = result[i, ]
 	plot_one_row(rowI)
 }

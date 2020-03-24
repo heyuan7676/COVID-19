@@ -33,4 +33,4 @@ mv *.gct GTEx_data
 mv *.txt GTEx_data
 mv GTEx_Analysis_v8_eQTL_covariates ./GTEx_data/
 
-mkdir -p results
+mkdir -p results/plots
