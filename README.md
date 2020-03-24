@@ -17,12 +17,12 @@ Perform SVA to learn about the SVs, and test asscoations with AGE and SEX contro
 
 Pipeline:
 `
-bash download_data.sh
-bash extract_protein_coding_lincRNA_genes.sh
-Rscript generate_tissue_wise_TPM.R
-Rscript SVA_compute_SV.R
-Rscript SVA_followedby_LR.R ENSG00000130234.10
-Rscript SVA_followedby_LR.R ENSG00000184012.11
+bash download_data.sh <br/>
+bash extract_protein_coding_lincRNA_genes.sh<br/>
+Rscript generate_tissue_wise_TPM.R<br/>
+Rscript SVA_compute_SV.R<br/>
+Rscript SVA_followedby_LR.R ENSG00000130234.10<br/>
+Rscript SVA_followedby_LR.R ENSG00000184012.11<br/>
 `
 
 Test asscoations with AGE and SEX controlling for known confounders <br/>
