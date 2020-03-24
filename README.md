@@ -25,7 +25,7 @@ Pipeline:<br/>
 
 
 Test asscoations with AGE and SEX controlling for known confounders <br/>
-Rscript LR_confounders.R
+`Rscript LR_confounders.R`
 
 * DTHHRDY  - Death Circumstances<br/>
 * SMRIN  - RIN number <br/>
