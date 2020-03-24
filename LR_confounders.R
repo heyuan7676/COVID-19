@@ -1,7 +1,7 @@
 source("utils.R")
 
 ###
-##Input: TPM value for ACE2 and TMPRSS2, Donor attributes, Sample attributes, covariates (including the genotype PC2)
+##Input: gene x TPM matrix, Donor attributes, Sample attributes, covariates (including the genotype PC2)
 ##All are available from GTEx portal
 
 ##Output: "gene_cov_correlations.txt"
@@ -16,58 +16,66 @@ readin_gene_tpm <- function(){
 }
 
 #Returns table of TPM and covariates for patients with given tissue type
-readin_data_in_tissue <- function(tissue){
+readin_data_in_tissue <- function(tissue, Test_gene){
   # sample covariates
   sample_in_the_tissue = samples %>% filter(SMTSD == tissue)
   
   # read in genotype PCs
-  tis = gsub(" ", "_", gsub('\\)', '', gsub(' \\(', '_', gsub(' - ', '_', tissue))))
+  tissue_name = gsub(" ", "_", gsub('\\)', '', gsub(' \\(', '_', gsub(' - ', '_', tissue))))
   #print(paste0("Tissue: ", tissue, "; Tis: ",tis))
-  genotype_PCs  = tryCatch(read.table(paste0(datadir, 'GTEx_Analysis_v8_eQTL_covariates/',tis,'.v8.covariates.txt'), 
+  genotype_PCs  = tryCatch(read.table(paste0(datadir, 'GTEx_Analysis_v8_eQTL_covariates/',tissue_name,'.v8.covariates.txt'), 
                                  sep='\t', header = T, stringsAsFactors = F, row.names = 1), warning = function (w) {print(paste("No data available for tissue type", tis))}, error = function(f) {return("failed")}
                                   )
   if(inherits(genotype_PCs, "character")){
-    print(paste(" ", "Skipping tissue", tis))
+    print(paste(" ", "Skipping tissue", tissue_name))
     return()
   }
   genotype_PCs = genotype_PCs[1:5, ]
   genotype_PCs = as.data.frame(t(genotype_PCs))
-  genotype_PCs$SUBJID = sapply(rownames(genotype_PCs), function(x) gsub("\\.", "-", x))
+  genotype_PCs$SUBJID = rownames(genotype_PCs)
+  samples_used = rownames(genotype_PCs)
   
   # gene TPM
-  gene_tpm_in_the_tissue = gene_tpm.t %>% filter(sampleID %in% sample_in_the_tissue$SAMPID)
-  colnames(gene_tpm_in_the_tissue) = c("ENSG00000130234.10", "ENSG00000184012.11", "SAMPID")
+  gene_tpm_in_the_tissue = read.table(paste0(datadir, 'tissue_tpm/', tissue_name, '_gene_TPM.txt'),
+                                      sep = '\t', header = T, stringsAsFactors = F, row.names = 1)
+  gene_tpm_in_the_tissue = log10(gene_tpm_in_the_tissue + 1)
+  colnames(gene_tpm_in_the_tissue) = sapply(colnames(gene_tpm_in_the_tissue), 
+                                            function(x) paste(strsplit(x, '\\.')[[1]][1][1], strsplit(x, '\\.')[[1]][2], sep = '.'))
+  
+  if(Test_gene %in% rownames(gene_tpm_in_the_tissue)){
+   Test_gene_tpm = data.frame("SUBJID" = samples_used)
+   Test_gene_tpm$geneEXP = as.numeric(gene_tpm_in_the_tissue[Test_gene, samples_used])
+  }
   
   # merge
-  df_test = merge(sample_in_the_tissue, gene_tpm_in_the_tissue, by = 'SAMPID')
+  sample_in_the_tissue$SUBJID = sapply(sample_in_the_tissue$SUBJID, function(x) gsub("-","\\.", x))
+  df_test = merge(sample_in_the_tissue, Test_gene_tpm, by = 'SUBJID')
   df_test = merge(df_test, genotype_PCs, by = 'SUBJID')
   
-  ### remove missing data
-  df_test.complete = df_test[complete.cases(df_test), ]
-  #print(paste0("Removed ", dim(df_test)[1]-dim(df_test.complete)[1], " data points with missing data"))
-  #print(paste0("Test with ", dim(df_test.complete)[1], " data points"))
-  
-  return(df_test.complete)
+  return(df_test)
 }
 
 
 #This outputs a table listing each "Tissue", "Gene", "Variable", "Median_TPM","coefficient", "pvalue", FDR
-check_geneI <- function(geneI){
+check_Test_gene_LR <- function(Test_gene){
   collect_result = NULL
   for(tissue in sort(unique(samples$SMTSD))){
     ### read in
-    exp_for_tiss = readin_data_in_tissue(tissue)
+    exp_for_tiss = readin_data_in_tissue(tissue, Test_gene)
     if(is.null(exp_for_tiss)){
       next
     }
     
-    ### log transform
-    exp_for_tiss$geneEXP = log10(as.numeric(exp_for_tiss[,geneI])+1)
+    print(paste0('Perform LR using confounders for ', tissue))
+    ### remove missing data
+    exp_for_tiss.complete = exp_for_tiss[complete.cases(exp_for_tiss), ]
+    #print(paste0("Removed ", dim(exp_for_tiss)[1]-dim(exp_for_tiss.complete)[1], " data points with missing data"))
+    #print(paste0("Test with ", dim(exp_for_tiss)[1], " data points"))
 
     ### fit on geneEXP
     model   = lm(geneEXP~PC1+PC2+PC3+PC4+PC5+AGE_GROUP+SEX+factor(DTHHRDY)+SMRIN+SMTSISCH+SMEXNCRT, 
-                 data = exp_for_tiss)
-    AGE_GROUP_test = c(tissue, geneI, "AGE", median(as.numeric(exp_for_tiss[,geneI])), 
+                 data = exp_for_tiss.complete)
+    AGE_GROUP_test = c(tissue, Test_gene, "AGE", median(as.numeric(exp_for_tiss$geneEXP)), 
                        summary(model)$coefficients[,3]["AGE_GROUP"], 
                        summary(model)$coefficients[,4]["AGE_GROUP"])
     collect_result = rbind(collect_result, AGE_GROUP_test)
@@ -76,16 +84,15 @@ check_geneI <- function(geneI){
     # if only one sex, skip this step
     # if the tissue has less than 10 samples in either gender group, skip this step
     if(sum(table(exp_for_tiss$SEX) < 10) > 0){
-      SEX_test = c(tissue, geneI,"SEX",median(as.numeric(exp_for_tiss[,geneI])), 0, -1)
+      SEX_test = c(tissue, Test_gene,"SEX",median(as.numeric(exp_for_tiss$geneEXP)), 0, -1)
     }else if(length(unique(exp_for_tiss$SEX)) == 2){
-      SEX_test = c(tissue, geneI, "SEX", median(as.numeric(exp_for_tiss[,geneI])),
+      SEX_test = c(tissue, Test_gene, "SEX", median(as.numeric(exp_for_tiss$geneEXP)),
                    summary(model)$coefficients[,3]["SEX"], 
                    summary(model)$coefficients[,4]["SEX"])
     }else{
-      SEX_test = c(tissue, geneI,"SEX",median(as.numeric(exp_for_tiss[,geneI])), 0, -1)
+      SEX_test = c(tissue, Test_gene,"SEX",median(as.numeric(exp_for_tiss$geneEXP)), 0, -1)
     }
     collect_result = rbind(collect_result, SEX_test)
-    #print(" ")
   }
   
   
@@ -97,17 +104,23 @@ check_geneI <- function(geneI){
   collect_result = collect_result[order(collect_result$pvalue), ]
   
   collect_result$Median_TPM = as.numeric(as.character(collect_result$Median_TPM))
+  collect_result$Median_TPM = 10^(collect_result$Median_TPM) - 1
   collect_result = collect_result[collect_result$Median_TPM > 1, ]
   collect_result$FDR = p.adjust(collect_result$pvalue, method = 'BH')
+  collect_result = collect_result[order(collect_result$pvalue), ]
+  
+  collect_result$Tissue = as.character(collect_result$Tissue)
+  collect_result$Variable = as.character(collect_result$Variable)
 
+  write.table(collect_result, paste0(outdir, 'Association_tests_',Test_gene, '_LR.csv'), sep=',', row.names = F)
+  
   return(collect_result)
 }
 
 
 
 ### Plot: Gene - SEX
-plot_gene_sex <- function(geneI, df){
-  df = df[df$Gene == geneI, ]
+plot_gene_sex <- function(Test_gene, df){
   Gene_SEX = df[df$Variable == 'SEX', ]
   if(dim(Gene_SEX)[1] == 0){
     return ()
@@ -119,17 +132,15 @@ plot_gene_sex <- function(geneI, df){
     tissue = as.character(rowi['Tissue'])
     
     ### read in
-    exp_for_tiss = readin_data_in_tissue(tissue)
-    
-    ### log transform
-    exp_for_tiss$geneEXP = log10(as.numeric(exp_for_tiss[,geneI])+1)
+    exp_for_tiss = readin_data_in_tissue(tissue,Test_gene)
+    exp_for_tiss.complete = exp_for_tiss[complete.cases(exp_for_tiss), ]
     
     ### fit the model
     model   = lm(geneEXP~PC1+PC2+PC3+PC4+PC5+AGE_GROUP+factor(DTHHRDY)+SMRIN+SMTSISCH+SMEXNCRT, 
-                 data = exp_for_tiss)
-    exp_for_tiss$corrected_expression = model$residuals
+                 data = exp_for_tiss.complete)
+    exp_for_tiss.complete$corrected_expression = model$residuals
     
-    df_for_plot = exp_for_tiss[,c("SMTSD", "corrected_expression", "Gender")]
+    df_for_plot = exp_for_tiss.complete[,c("SMTSD", "corrected_expression", "Gender")]
     df_for_plot$coefficient = rowi$coefficient
     df_for_plot$Median_TPM = rowi$Median_TPM
     #df_for_plot = rbind(df_for_plot, df_for_plot_i)
@@ -143,11 +154,11 @@ plot_gene_sex <- function(geneI, df){
       theme_bw() + 
       theme(axis.text.x = element_blank()) + 
       xlab("") + 
-      ylab(paste0("Corrected expression of ", geneI)) + 
+      ylab(paste0("Corrected expression of ", Test_gene)) + 
       scale_fill_brewer(palette = 'Set1')
     
     tis_name = gsub(" ", "_", gsub('\\)', '', gsub(' \\(', '_', gsub(' - ', '_', tissue)))) 
-    png(paste0(outdir,'plots/', geneI, '_',tis_name,'_SEX_LR.png'), 
+    png(paste0(outdir,'plots/', Test_gene, '_',tis_name,'_SEX_LR.png'), 
         res = 130, height = 500, width = 600)
     print(g_sex)
     dev.off()
@@ -156,11 +167,11 @@ plot_gene_sex <- function(geneI, df){
 }
 
 ### Plot: Gene - AGE
-plot_gene_age <- function(geneI, df){
-  df = df[df$Gene == geneI, ]
+plot_gene_age <- function(Test_gene, df){
+  df = df[df$Gene == Test_gene, ]
   Gene_AGE = df[df$Variable == 'AGE', ]
   if(dim(Gene_AGE)[1] == 0){
-    return
+    return ()
   }
   df_for_plot = NULL
   
@@ -169,17 +180,15 @@ plot_gene_age <- function(geneI, df){
     tissue = as.character(rowi['Tissue'])
     
     ### read in
-    exp_for_tiss = readin_data_in_tissue(tissue)
-    
-    ### log transform
-    exp_for_tiss$geneEXP = log10(as.numeric(exp_for_tiss[,geneI])+1)
+    exp_for_tiss = readin_data_in_tissue(tissue, Test_gene)
+    exp_for_tiss.complete = exp_for_tiss[complete.cases(exp_for_tiss), ]
     
     ### fit the model
     model   = lm(geneEXP~PC1+PC2+PC3+PC4+PC5+SEX+factor(DTHHRDY)+SMRIN+SMTSISCH+SMEXNCRT, 
-                 data = exp_for_tiss)
-    exp_for_tiss$corrected_expression = model$residuals
+                 data = exp_for_tiss.complete)
+    exp_for_tiss.complete$corrected_expression = model$residuals
     
-    df_for_plot = exp_for_tiss[,c("SMTSD","corrected_expression", "AGE")]
+    df_for_plot = exp_for_tiss.complete[,c("SMTSD","corrected_expression", "AGE")]
     df_for_plot$coefficient = rowi$coefficient
     df_for_plot$Median_TPM = rowi$Median_TPM
     df_for_plot = rbind(df_for_plot, df_for_plot)
@@ -193,11 +202,11 @@ plot_gene_age <- function(geneI, df){
       theme_bw() + 
       theme(axis.text.x = element_blank()) + 
       xlab("") + 
-      ylab(paste0("Corrected expression of ", geneI)) + 
+      ylab(paste0("Corrected expression of ", Test_gene)) + 
       scale_fill_brewer(palette = 'Greens')
     
     tis_name = gsub(" ", "_", gsub('\\)', '', gsub(' \\(', '_', gsub(' - ', '_', tissue)))) 
-    png(paste0(outdir, 'plots/', geneI, '_',tis_name,'_AGE_LR.png'), 
+    png(paste0(outdir, 'plots/', Test_gene, '_',tis_name,'_AGE_LR.png'), 
         res = 130, height = 500, width = 600)
     print(g_AGE)
     dev.off()
@@ -206,24 +215,15 @@ plot_gene_age <- function(geneI, df){
 
 }
 
-gene_tpm.t <- readin_gene_tpm()
-ACE2_result = check_geneI("ENSG00000130234.10")
-TMPRSS2_result = check_geneI("ENSG00000184012.11")
 
-reg_result = rbind(ACE2_result, TMPRSS2_result)
-reg_result$Median_TPM = as.numeric(as.character(reg_result$Median_TPM))
-reg_result = reg_result[reg_result$Median_TPM > 1, ]
 
-reg_result = reg_result[order(reg_result$pvalue), ]
-write.table(reg_result, paste0(outdir, 'gene_cov_correlations_LR.csv'), sep=',', row.names = F)
+args <- commandArgs(TRUE)
+Test_gene = args[1]
+
+reg_result = check_Test_gene_LR(Test_gene)
 
 #### Plot
-#reg_result = read.table(paste0(outdir, 'gene_cov_correlations_LR.csv'), sep=',',header = T,stringsAsFactors = F)
-reg_result$Tissue = as.character(reg_result$Tissue)
-reg_result = reg_result[reg_result$FDR < 0.1, ]
-
-plot_gene_sex("ENSG00000130234.10", reg_result)
-plot_gene_age("ENSG00000130234.10", reg_result)
-plot_gene_sex("ENSG00000184012.11", reg_result)
-plot_gene_age("ENSG00000184012.11", reg_result)
+sig = reg_result[reg_result$FDR < 0.1, ]
+plot_gene_sex(Test_gene, sig)
+plot_gene_age(Test_gene, sig)
 

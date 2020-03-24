@@ -2,7 +2,6 @@ library(sva)
 source("utils.R")
 
 dir.create(file.path(datadir, "SVA_corrected/"), showWarnings = FALSE)
-dir.create(file.path(outdir,  "Assoc_results_SVA/"), showWarnings = FALSE)
 
 test_association <- function(tissue){
   # sample covariates
@@ -19,7 +18,6 @@ test_association <- function(tissue){
   # gene TPM
   gene_tpm_in_the_tissue = read.table(paste0(datadir, 'tissue_tpm/', tissue_name, '_gene_TPM.txt'),
                                       sep = '\t', header = T, stringsAsFactors = F, row.names = 1)
-  gene_tpm_in_the_tissue = gene_tpm_in_the_tissue[apply(gene_tpm_in_the_tissue, 1, function(x) sum(x>0.1)) > 0.2 * ncol(gene_tpm_in_the_tissue),]
   gene_tpm_in_the_tissue = log10(gene_tpm_in_the_tissue + 1)
 
   sample_in_the_tissue = sample_in_the_tissue[gsub("\\.", "-", colnames(gene_tpm_in_the_tissue)), ]
@@ -88,7 +86,7 @@ test_association <- function(tissue){
 }
 
 
-run_all_tissues <- function(Test_gene){
+check_Test_gene_SVA <- function(Test_gene){
   dir.create(file.path(datadir, "SVA_corrected/", Test_gene, '/'), showWarnings = FALSE)
   result = data.frame()
   for(tissue in sort(unique(samples$SMTSD))){
@@ -112,7 +110,9 @@ run_all_tissues <- function(Test_gene){
   result$FDR = p.adjust(result$"p-value", method = 'BH')
   result = result[,c("Tissue", "Gene", "Variable", "median_TPM", "coefficient", "p-value", "FDR")]
   result = result[order(result$"p-value"), ]
-  write.table(result, paste0(outdir, 'Assoc_results_SVA/Association_tests_', Test_gene,'.csv'), sep=',', row.names=F, quote = FALSE)
+  write.table(result, paste0(outdir, 'Association_tests_', Test_gene,'_SVA.csv'), sep=',', row.names=F, quote = FALSE)
+  
+  return(result)
 }
 
 
@@ -161,14 +161,13 @@ plot_one_row <- function(rowi){
 
 args <- commandArgs(TRUE)
 Test_gene = args[1]
-#Test_gene = 'ENSG00000130234.10'
-run_all_tissues(Test_gene)
 
-result = read.table(paste0(outdir, 'Assoc_results_SVA/Association_tests_', Test_gene,'.csv'), 
-                    sep=',', header=T, stringsAsFactors = F)
-result = result[result$FDR < 0.05, ]
-for(i in seq(1, nrow(result))){
-	rowI = result[i, ]
+reg_result = check_Test_gene_SVA(Test_gene)
+
+# plot
+sig = reg_result[reg_result$FDR < 0.05, ]
+for(i in seq(1, nrow(sig))){
+	rowI = sig[i, ]
 	plot_one_row(rowI)
 }
 

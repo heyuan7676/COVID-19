@@ -35,4 +35,5 @@ Rscript SVA_followedby_LR.R ENSG00000184012.11
 
 
 ## Linear regerssion controlling for known confounders
-Rscript LR_confounders.R
+Rscript LR_confounders.R ENSG00000130234.10
+Rscript LR_confounders.R ENSG00000184012.11
