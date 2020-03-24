@@ -32,7 +32,7 @@ readin_samples <- function(){
 
 
 datadir = './GTEx_data/'
-outdir = './results'
+outdir = './results/'
 donors = fread(paste0(datadir, 'GTEx_Analysis_v8_Annotations_SubjectPhenotypesDS.txt'))
 samples = readin_samples()
 
