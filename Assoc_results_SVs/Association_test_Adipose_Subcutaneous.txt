@@ -1,0 +1,5 @@
+"coefficient"	"p-value"	"median_TPM"	"Variable"	"Gene"	"Tissue"
+0.513530734108618	0.607792124275759	0.521791649639123	"AGE"	"ACE2"	"Adipose - Subcutaneous"
+4.79716998484167	2.0888027245922e-06	0.521791649639123	"SEX"	"ACE2"	"Adipose - Subcutaneous"
+0	-1	0	"AGE"	"TMPRSS2"	"Adipose - Subcutaneous"
+0	-1	0	"SEX"	"TMPRSS2"	"Adipose - Subcutaneous"

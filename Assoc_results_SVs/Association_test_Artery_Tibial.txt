@@ -1,0 +1,5 @@
+"coefficient"	"p-value"	"median_TPM"	"Variable"	"Gene"	"Tissue"
+1.63689192166135	0.102236741551427	0.0685012598813328	"AGE"	"ACE2"	"Artery - Tibial"
+-2.53179235699976	0.01163055560263	0.0685012598813328	"SEX"	"ACE2"	"Artery - Tibial"
+0	-1	0	"AGE"	"TMPRSS2"	"Artery - Tibial"
+0	-1	0	"SEX"	"TMPRSS2"	"Artery - Tibial"

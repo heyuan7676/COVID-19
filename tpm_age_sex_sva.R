@@ -71,12 +71,16 @@ test_association <- function(tissue){
   
 
   ### Test association with SEX
-  if(length(table(sample_in_the_tissue$SEX)) == 1){
+  # if only one sex, skip this step
+  # if the tissue has less than 10 samples in either gender group, skip this step
+  if(sum(table(exp_for_tiss$SEX) < 10) > 0){
+    ace2_result = rbind(ace2_result, c(0, -1, 0))
+    TMPRSS2_result = rbind(TMPRSS2_result, c(0, -1, 0))
+  }else if(length(table(sample_in_the_tissue$SEX)) == 1){
     ace2_result = rbind(ace2_result, c(0, -1, 0))
     TMPRSS2_result = rbind(TMPRSS2_result, c(0, -1, 0))
   }else{     
 
- 
   ## keep SEX when estimating SVs
   mod = model.matrix(~SEX,data=sample_in_the_tissue)
   mod0 = model.matrix(~1, data=sample_in_the_tissue)

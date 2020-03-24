@@ -1,0 +1,5 @@
+"coefficient"	"p-value"	"median_TPM"	"Variable"	"Gene"	"Tissue"
+1.01853497560268	0.309732730521333	0.0532321335460988	"AGE"	"ACE2"	"Brain - Nucleus accumbens (basal ganglia)"
+0.947840475963647	0.34442742634462	0.0532321335460988	"SEX"	"ACE2"	"Brain - Nucleus accumbens (basal ganglia)"
+0	-1	0	"AGE"	"TMPRSS2"	"Brain - Nucleus accumbens (basal ganglia)"
+0	-1	0	"SEX"	"TMPRSS2"	"Brain - Nucleus accumbens (basal ganglia)"

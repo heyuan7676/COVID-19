@@ -1,0 +1,5 @@
+"coefficient"	"p-value"	"median_TPM"	"Variable"	"Gene"	"Tissue"
+-0.0938561405107012	0.925348685540461	0.0352575873623452	"AGE"	"ACE2"	"Brain - Hippocampus"
+0.548596313325146	0.584098124004313	0.0352575873623452	"SEX"	"ACE2"	"Brain - Hippocampus"
+0	-1	0	"AGE"	"TMPRSS2"	"Brain - Hippocampus"
+0	-1	0	"SEX"	"TMPRSS2"	"Brain - Hippocampus"

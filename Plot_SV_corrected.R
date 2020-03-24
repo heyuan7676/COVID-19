@@ -5,6 +5,7 @@ collect_result = NULL
 for(tissue in sort(unique(samples$SMTSD))){
   tis =  gsub(" ", "_", gsub('\\)', '', gsub(' \\(', '_', gsub(' - ', '_', tissue))))
   
+
   df = tryCatch(read.table(paste0(outdir, 'Assoc_results_SVs/Association_test_',tis,'.txt'), 
                   sep='\t', header = T, stringsAsFactors = F),warning = function (w) {print(paste("No data available for tissue type", tis))}, error = function(f) {return("failed")}
  )
@@ -14,6 +15,7 @@ for(tissue in sort(unique(samples$SMTSD))){
   }
 
 ## remove tissues with less than 70 samples
+
   sample_in_the_tissue = samples %>% filter(SMTSD == tissue)
   if(nrow(sample_in_the_tissue) < 70){ next }
   collect_result = rbind(collect_result, df)

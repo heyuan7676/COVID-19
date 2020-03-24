@@ -1,0 +1,5 @@
+"coefficient"	"p-value"	"median_TPM"	"Variable"	"Gene"	"Tissue"
+0.655146610014189	0.513659400656966	0.031557916634135	"AGE"	"ACE2"	"Brain - Amygdala"
+2.59413947939329	0.0106946144770232	0.031557916634135	"SEX"	"ACE2"	"Brain - Amygdala"
+0	-1	0	"AGE"	"TMPRSS2"	"Brain - Amygdala"
+0	-1	0	"SEX"	"TMPRSS2"	"Brain - Amygdala"

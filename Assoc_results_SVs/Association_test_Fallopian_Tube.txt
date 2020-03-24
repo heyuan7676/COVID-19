@@ -1,0 +1,5 @@
+"coefficient"	"p-value"	"median_TPM"	"Variable"	"Gene"	"Tissue"
+0.935365912768153	0.385700195097221	0.381656482585787	"AGE"	"ACE2"	"Fallopian Tube"
+0	-1	0	"SEX"	"ACE2"	"Fallopian Tube"
+-0.634464832703692	0.549188820237121	0.375480714618572	"AGE"	"TMPRSS2"	"Fallopian Tube"
+0	-1	0	"SEX"	"TMPRSS2"	"Fallopian Tube"

@@ -1,0 +1,5 @@
+"coefficient"	"p-value"	"median_TPM"	"Variable"	"Gene"	"Tissue"
+-3.00049379062937	0.0029216193607306	1.67833616076664	"AGE"	"ACE2"	"Testis"
+0	-1	0	"SEX"	"ACE2"	"Testis"
+0.482924171834544	0.629501797687384	0.468051791454238	"AGE"	"TMPRSS2"	"Testis"
+0	-1	0	"SEX"	"TMPRSS2"	"Testis"
