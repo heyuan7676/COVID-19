@@ -19,13 +19,6 @@ estimate_SVs <- function(tissue){
 
   sample_in_the_tissue = sample_in_the_tissue[gsub("\\.", "-", colnames(gene_tpm_in_the_tissue)), ]
 
-  ## in generate_tissue_wise_TPM.R: make sure that sample orders in sample_in_the_tissue is the same as in gene_tpm_in_the_tissue 
-  save_df = NULL
-  save_df = cbind(save_df, sample_in_the_tissue$SAMPID)
-  save_df = cbind(save_df, sample_in_the_tissue$AGE)
-  save_df = cbind(save_df, sample_in_the_tissue$Gender)
-  save_df_cols = c('SAMPID', 'AGE', 'SEX')
- 
   ## 1). keep AGE_GROUP when estimating SVs
   mod = model.matrix(~AGE_GROUP,data=sample_in_the_tissue)
   mod0 = model.matrix(~1, data=sample_in_the_tissue)

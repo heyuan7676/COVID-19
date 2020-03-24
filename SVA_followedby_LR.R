@@ -3,7 +3,6 @@ source("utils.R")
 
 dir.create(file.path(datadir, "SVA_corrected/"), showWarnings = FALSE)
 dir.create(file.path(outdir,  "Assoc_results_SVA/"), showWarnings = FALSE)
-dir.create(file.path(outdir,  "plots/"), showWarnings = FALSE)
 
 test_association <- function(tissue){
   # sample covariates
@@ -38,7 +37,7 @@ test_association <- function(tissue){
     gene_y = gene_tpm_in_the_tissue[Test_gene,]
     # AGE
     cov = read.table(paste0(datadir, 'SVs/', tissue_name, '_SVs_AGE.txt'), sep = '\t', header = T)
-	cov = as.matrix(cov)
+	  cov = as.matrix(cov)
     fitsv = lm(t(gene_y)~cov)
     coef = summary(fitsv)$coefficients['covAGE_GROUP', 3]
     pvalue = summary(fitsv)$coefficients['covAGE_GROUP', 4]
@@ -74,7 +73,8 @@ test_association <- function(tissue){
 
   save_df = as.data.frame(save_df)
   colnames(save_df) = save_df_cols 
-  write.table(save_df, paste0(datadir, 'SVA_corrected/', tissue_name, '_SV_removed.txt'), sep = '\t', quote = FALSE)
+  write.table(save_df, paste0(datadir, 'SVA_corrected/', Test_gene, '/', tissue_name, '_SV_removed.txt'), 
+              sep = '\t', quote = FALSE, row.names = F)
 
   result_tested_gene = as.data.frame(result_tested_gene)
   colnames(result_tested_gene) = c("coefficient", "p-value", "median_TPM")
@@ -86,19 +86,43 @@ test_association <- function(tissue){
 }
 
 
+run_all_tissues <- function(Test_gene){
+  dir.create(file.path(datadir, "SVA_corrected/", Test_gene, '/'), showWarnings = FALSE)
+  result = data.frame()
+  for(tissue in sort(unique(samples$SMTSD))){
+    print(tissue)
+    result_tested_gene = tryCatch(test_association(tissue), warning = function (w) {print(paste("No data available for tissue type", tis))},
+                                  error = function(f) {return()})
+    if(! is.null(result_tested_gene)){
+      result = rbind(result, result_tested_gene)
+    }
+  }
+  
+  ## remove null test
+  result = result[result$"p-value" > 0, ]
+  
+  ## remove tissues with low gene expression (median TPM < 1)
+  result$median_TPM = 10^(result$median_TPM) - 1
+  result = result[result$median_TPM > 1, ]
+  
+  ## compute FDR for each gene seperately
+  result$FDR = p.adjust(result[,"p-value"], method = 'BH')
+  result = result[,c("Tissue", "Gene", "Variable", "median_TPM", "coefficient", "p-value", "FDR")]
+  write.table(result, paste0(outdir, 'Assoc_results_SVA/Association_tests_', Test_gene,'.csv'), sep=',', row.names=F, quote = FALSE)
+}
+
 
 ## plot
 plot_one_row <- function(rowi){
   tissue = rowi['Tissue']
   tissue_name = gsub(" ", "_", gsub('\\)', '', gsub(' \\(', '_', gsub(' - ', '_', tissue))))
-
+  
   # read in 
-  corrected_df = try(read.table(paste0(datadir, 'SVA_corrected/', tissue_name, '_SV_removed.txt'),
-                            sep = '\t', header = T, stringsAsFactors = F))
+  corrected_df = try(read.table(paste0(datadir, 'SVA_corrected/', Test_gene, '/', tissue_name, '_SV_removed.txt'),
+                                sep = '\t', header = T, stringsAsFactors = F))
   if(inherits(corrected_df, "try-error")){
     return()
   }
-
   y = corrected_df[, paste('SVA', rowi['Variable'], sep = '_')]
   x = corrected_df[, as.character(rowi['Variable'])]
   if(as.character(rowi['Variable']) == 'AGE'){
@@ -110,8 +134,8 @@ plot_one_row <- function(rowi){
     color_p = 'Set1'
   }
   ggtitle_text = paste0(tissue,
-                   ':\n coef = ', round(rowi$coefficient,3),
-                   ':\n median TPM = ', round(rowi$median_TPM, 3))
+                        ':\n coef = ', round(rowi$coefficient,3),
+                        ':\n median TPM = ', round(rowi$median_TPM, 3))
   df_for_plot = data.frame("Covariate"=x, "y"=y)
   gg = ggplot(aes(x = Covariate, y = y), data = df_for_plot) +
     geom_boxplot(aes(fill = Covariate)) +
@@ -121,7 +145,7 @@ plot_one_row <- function(rowi){
     ylab(paste0("Corrected expression of ", rowi['Gene'])) +
     ggtitle(ggtitle_text) +
     scale_fill_brewer(palette = color_p)
-
+  
   png(paste0(outdir, 'plots/', rowi['Gene'], '_',tissue_name,'_',as.character(rowi['Variable']),'_SVA.png'),
       res = 130, height = 500, width = 600)
   print(gg)
@@ -131,38 +155,13 @@ plot_one_row <- function(rowi){
 
 
 
-
-
-
-
-
-
 args <- commandArgs(TRUE)
 Test_gene = args[1]
 #Test_gene = 'ENSG00000130234.10'
-result = data.frame()
-for(tissue in sort(unique(samples$SMTSD))[1:5]){
-	  print(tissue)
-	  result_tested_gene = tryCatch(test_association(tissue), warning = function (w) {print(paste("No data available for tissue type", tis))},
-									                                error = function(f) {return()})
-  if(! is.null(result_tested_gene)){
-	          result = rbind(result, result_tested_gene)
-    }
-}
+run_all_tissues(Test_gene)
 
-## remove null test
-result = result[result$"p-value" > 0, ]
-
-## remove tissues with low gene expression (median TPM < 1)
-result$median_TPM = 10^(result$median_TPM) - 1
-result = result[result$median_TPM > 1, ]
-
-## compute FDR for each gene seperately
-result$FDR = p.adjust(result[,"p-value"], method = 'BH')
-result = result[,c("Tissue", "Gene", "Variable", "median_TPM", "coefficient", "p-value", "FDR")]
-write.table(result, paste0(outdir, 'Assoc_results_SVA/Association_tests_', Test_gene,'.csv'), sep=',', row.names=F, quote = FALSE)
-
-
+result = read.table(paste0(outdir, 'Assoc_results_SVA/Association_tests_', Test_gene,'.csv'), 
+                    sep=',', header=T, stringsAsFactors = F)
 for(i in seq(1, sum(result$FDR < 0.05))){
 	rowI = result[i, ]
 	plot_one_row(rowI)

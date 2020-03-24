@@ -110,7 +110,7 @@ plot_gene_sex <- function(geneI, df){
   df = df[df$Gene == geneI, ]
   Gene_SEX = df[df$Variable == 'SEX', ]
   if(dim(Gene_SEX)[1] == 0){
-    return
+    return ()
   }
   df_for_plot = NULL
   
@@ -147,7 +147,7 @@ plot_gene_sex <- function(geneI, df){
       scale_fill_brewer(palette = 'Set1')
     
     tis_name = gsub(" ", "_", gsub('\\)', '', gsub(' \\(', '_', gsub(' - ', '_', tissue)))) 
-    png(paste0(outdir, geneI, '_',tis_name,'_SEX_LR.png'), 
+    png(paste0(outdir,'plots/', geneI, '_',tis_name,'_SEX_LR.png'), 
         res = 130, height = 500, width = 600)
     print(g_sex)
     dev.off()
@@ -218,7 +218,8 @@ reg_result = reg_result[order(reg_result$pvalue), ]
 write.table(reg_result, paste0(outdir, 'gene_cov_correlations_LR.csv'), sep=',', row.names = F)
 
 #### Plot
-reg_result = read.table(paste0(outdir, 'gene_cov_correlations_LR.csv'), sep=',',header = T,stringsAsFactors = F)
+#reg_result = read.table(paste0(outdir, 'gene_cov_correlations_LR.csv'), sep=',',header = T,stringsAsFactors = F)
+reg_result$Tissue = as.character(reg_result$Tissue)
 reg_result = reg_result[reg_result$FDR < 0.1, ]
 
 plot_gene_sex("ACE2", reg_result)
