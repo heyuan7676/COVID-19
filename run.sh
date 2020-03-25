@@ -7,7 +7,7 @@
 
 ml R/3.5.1
 ml parallel
-
+set -e
 ## download data
 bash download_data.sh
 
