@@ -25,7 +25,6 @@ readin_samples <- function(){
   samples[samples$SEX == 2, "Gender"] = 'Female'
   samples$Gender = factor(samples$Gender, levels = c("Male", "Female"))
   
-
   return(samples)
 }
 
