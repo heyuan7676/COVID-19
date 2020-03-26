@@ -153,12 +153,12 @@ plot_one_row <- function(rowi){
     theme_bw() +
     scale_x_discrete(labels=xlabs) + 
     xlab("") +
-    ylab(paste0("Corrected expression of ", rowi['Gene'])) +
+    ylab(paste0("Corrected expression of ", Test_gene_name)) +
     ggtitle(ggtitle_text) +
     scale_fill_brewer(palette = color_p) + 
     theme(legend.position = 'none')
   
-  png(paste0(outdir, 'plots/', rowi['Gene'], '_',tissue_name,'_',as.character(rowi['Variable']),'_SVA.png'),
+  png(paste0(outdir, 'plots/', Test_gene_name, '_',tissue_name,'_',as.character(rowi['Variable']),'_SVA.png'),
       res = 130, height = 500, width = 600)
   print(gg)
   dev.off()
@@ -169,6 +169,7 @@ plot_one_row <- function(rowi){
 
 args <- commandArgs(TRUE)
 Test_gene = args[1]
+Test_gene_name = args[2]
 
 reg_result = check_Test_gene_SVA(Test_gene)
 

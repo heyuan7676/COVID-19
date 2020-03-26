@@ -30,10 +30,10 @@ parallel -j 10 :::: ${command_fn}
 #Rscript SVA_compute_SV.R
 
 # Linear regression controlling for SVs
-Rscript SVA_followedby_LR.R ENSG00000130234.10
-Rscript SVA_followedby_LR.R ENSG00000184012.11
+Rscript SVA_followedby_LR.R ENSG00000130234.10 ACE2
+Rscript SVA_followedby_LR.R ENSG00000184012.11 TMPRSS2
 
 
 ## Linear regerssion controlling for known confounders
-Rscript LR_confounders.R ENSG00000130234.10
-Rscript LR_confounders.R ENSG00000184012.11
+Rscript LR_confounders.R ENSG00000130234.10 ACE2
+Rscript LR_confounders.R ENSG00000184012.11 TMPRSS2

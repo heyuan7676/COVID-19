@@ -150,11 +150,11 @@ plot_gene_sex <- function(Test_gene, df){
       scale_x_discrete(labels=xlabs) + 
       xlab("") + 
       theme(legend.position = 'none') + 
-      ylab(paste0("Corrected expression of ", Test_gene)) + 
+      ylab(paste0("Corrected expression of ", Test_gene_name)) + 
       scale_fill_brewer(palette = 'Set1')
     
     tis_name = gsub(" ", "_", gsub('\\)', '', gsub(' \\(', '_', gsub(' - ', '_', tissue)))) 
-    png(paste0(outdir,'plots/', Test_gene, '_',tis_name,'_SEX_LR.png'), 
+    png(paste0(outdir,'plots/', Test_gene_name, '_',tis_name,'_SEX_LR.png'), 
         res = 130, height = 500, width = 600)
     print(g_sex)
     dev.off()
@@ -200,11 +200,11 @@ plot_gene_age <- function(Test_gene, df){
       theme(legend.position = 'none') + 
       scale_x_discrete(labels=xlabs) + 
       xlab("") + 
-      ylab(paste0("Corrected expression of ", Test_gene)) + 
+      ylab(paste0("Corrected expression of ", Test_gene_name)) + 
       scale_fill_brewer(palette = 'Greens')
     
     tis_name = gsub(" ", "_", gsub('\\)', '', gsub(' \\(', '_', gsub(' - ', '_', tissue)))) 
-    png(paste0(outdir, 'plots/', Test_gene, '_',tis_name,'_AGE_LR.png'), 
+    png(paste0(outdir, 'plots/', Test_gene_name, '_',tis_name,'_AGE_LR.png'), 
         res = 130, height = 500, width = 600)
     print(g_AGE)
     dev.off()
@@ -217,12 +217,13 @@ plot_gene_age <- function(Test_gene, df){
 
 args <- commandArgs(TRUE)
 Test_gene = args[1]
+Test_gene_name = args[2]
 
-reg_result = check_Test_gene_LR(Test_gene)
+#reg_result = check_Test_gene_LR(Test_gene)
 
 #### Plot
-#reg_result = read.table(paste0(outdir, 'Association_tests_',Test_gene, '_LR.csv'),
-#                        sep= ',', header = T, stringsAsFactors = F)
+reg_result = read.table(paste0(outdir, 'Association_tests_',Test_gene, '_LR.csv'),
+                        sep= ',', header = T, stringsAsFactors = F)
 sig = reg_result[reg_result$FDR < 0.1, ]
 plot_gene_sex(Test_gene, sig)
 plot_gene_age(Test_gene, sig)
