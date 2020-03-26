@@ -17,11 +17,14 @@
 	generate_tissue_wise_TPM.R: Generate a matrix of genes by samples for each tissue
 	SVA_compute_SV.R: Infer about surrogate variables (SVs) using SVA
 	SVA_followedby_LR.R: Perform association tests controlling for SVs
+	
+	Rscript SVA_followedby_LR.R ENSG00000130234.10 ACE2
+	Rscript SVA_followedby_LR.R ENSG00000184012.11 TMPRSS2
 
 
 ###### Approach II: Test asscoations with AGE and SEX controlling for known confounders <br/>
-	Rscript LR_confounders.R ENSG00000130234.10
-	Rscript LR_confounders.R ENSG00000184012.11
+	Rscript LR_confounders.R ENSG00000130234.10 ACE2
+	Rscript LR_confounders.R ENSG00000184012.11 TMPRSS2
 		* DTHHRDY  - Death Circumstances
 		* SMRIN  - RIN number
 		* SMTSISCH - Total Ischemic time
