@@ -106,7 +106,7 @@ check_Test_gene_LR <- function(Test_gene){
   collect_result$Tissue = as.character(collect_result$Tissue)
   collect_result$Variable = as.character(collect_result$Variable)
 
-  write.table(collect_result, paste0(outdir, 'Association_tests_',Test_gene, '_LR.csv'), sep=',', row.names = F)
+  write.table(collect_result, paste0(outdir, 'Association_tests_',Test_gene_name, '_LR.csv'), sep=',', row.names = F)
   
   return(collect_result)
 }
@@ -219,10 +219,10 @@ args <- commandArgs(TRUE)
 Test_gene = args[1]
 Test_gene_name = args[2]
 
-#reg_result = check_Test_gene_LR(Test_gene)
+reg_result = check_Test_gene_LR(Test_gene)
 
 #### Plot
-reg_result = read.table(paste0(outdir, 'Association_tests_',Test_gene, '_LR.csv'),
+reg_result = read.table(paste0(outdir, 'Association_tests_',Test_gene_name, '_LR.csv'),
                         sep= ',', header = T, stringsAsFactors = F)
 sig = reg_result[reg_result$FDR < 0.1, ]
 plot_gene_sex(Test_gene, sig)

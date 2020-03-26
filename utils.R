@@ -21,9 +21,9 @@ readin_samples <- function(){
   samples[samples$AGE == '70-79', "AGE_GROUP"] = 6
   
   samples$Gender = '0'
-  samples[samples$SEX == 1, "Gender"] = 'Female'
-  samples[samples$SEX == 2, "Gender"] = 'Male'
-  samples$Gender = factor(samples$Gender, levels = c("Female", "Male"))
+  samples[samples$SEX == 1, "Gender"] = 'Male'
+  samples[samples$SEX == 2, "Gender"] = 'Female'
+  samples$Gender = factor(samples$Gender, levels = c("Male", "Female"))
   
 
   return(samples)

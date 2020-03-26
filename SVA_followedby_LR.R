@@ -73,7 +73,7 @@ test_association <- function(tissue){
 
   save_df = as.data.frame(save_df)
   colnames(save_df) = save_df_cols 
-  write.table(save_df, paste0(datadir, 'SVA_corrected/', Test_gene, '/', tissue_name, '_SV_removed.txt'), 
+  write.table(save_df, paste0(datadir, 'SVA_corrected/', Test_gene_name, '/', tissue_name, '_SV_removed.txt'), 
               sep = '\t', quote = FALSE, row.names = F)
 
   result_tested_gene = as.data.frame(result_tested_gene)
@@ -87,7 +87,7 @@ test_association <- function(tissue){
 
 
 check_Test_gene_SVA <- function(Test_gene){
-  dir.create(file.path(datadir, "SVA_corrected/", Test_gene, '/'), showWarnings = FALSE)
+  dir.create(file.path(datadir, "SVA_corrected/", Test_gene_name, '/'), showWarnings = FALSE)
   result = data.frame()
   for(tissue in sort(unique(samples$SMTSD))){
     result_tested_gene = tryCatch(test_association(tissue), warning = function (w) {print(paste("No data available for tissue type", tis))},
@@ -110,7 +110,7 @@ check_Test_gene_SVA <- function(Test_gene){
   result$FDR = p.adjust(result$"p-value", method = 'BH')
   result = result[,c("Tissue", "Gene", "Variable", "median_TPM", "coefficient", "p-value", "FDR")]
   result = result[order(result$"p-value"), ]
-  write.table(result, paste0(outdir, 'Association_tests_', Test_gene,'_SVA.csv'), sep=',', row.names=F, quote = FALSE)
+  write.table(result, paste0(outdir, 'Association_tests_', Test_gene_name,'_SVA.csv'), sep=',', row.names=F, quote = FALSE)
   
   return(result)
 }
@@ -122,7 +122,7 @@ plot_one_row <- function(rowi){
   tissue_name = gsub(" ", "_", gsub('\\)', '', gsub(' \\(', '_', gsub(' - ', '_', tissue))))
   
   # read in 
-  corrected_df = try(read.table(paste0(datadir, 'SVA_corrected/', Test_gene, '/', tissue_name, '_SV_removed.txt'),
+  corrected_df = try(read.table(paste0(datadir, 'SVA_corrected/', Test_gene_name, '/', tissue_name, '_SV_removed.txt'),
                                 sep = '\t', header = T, stringsAsFactors = F))
   if(inherits(corrected_df, "try-error")){
     return()
@@ -135,7 +135,7 @@ plot_one_row <- function(rowi){
                              "60-69", "70-79"))
     color_p = 'Greens'
   }else{
-    x = factor(x , levels = c(1,2), labels = c("Female", "Male"))
+    x = factor(x , levels = c(1,2), labels = c("Male", "Female"))
     color_p = 'Set1'
   }
   ggtitle_text = paste0(tissue,
@@ -174,7 +174,7 @@ Test_gene_name = args[2]
 reg_result = check_Test_gene_SVA(Test_gene)
 
 # plot
-#reg_result = read.table(paste0(outdir, 'Association_tests_', Test_gene,'_SVA.csv'), 
+#reg_result = read.table(paste0(outdir, 'Association_tests_', Test_gene_name,'_SVA.csv'), 
 #                        sep=',', header = T, stringsAsFactors = F)
 sig = reg_result[reg_result$FDR < 0.05, ]
 for(i in seq(1, nrow(sig))){
