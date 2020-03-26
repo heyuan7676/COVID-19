@@ -2,7 +2,7 @@
 
 ## Script structure
 ###### Pipeline: `bash run.sh` <br/>
-`download_data.sh`: download data from GTEX and Gencode for downstream analysis <br/>
+	`download_data.sh`: download data from GTEX and Gencode for downstream analysis <br/>
 
 
 ###### Script dependencies include the following R packages:<br/>
@@ -21,9 +21,7 @@
 
 ###### Approach II: Test asscoations with AGE and SEX controlling for known confounders <br/>
 	`Rscript LR_confounders.R ENSG00000130234.10` <br/>
-	`Rscript LR_confounders.R ENSG00000184012.11`
-
-
+	`Rscript LR_confounders.R ENSG00000184012.11` <br/>
 		* DTHHRDY  - Death Circumstances<br/>
 		* SMRIN  - RIN number <br/>
 		* SMTSISCH - Total Ischemic time <br/>
