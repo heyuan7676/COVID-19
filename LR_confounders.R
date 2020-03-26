@@ -222,8 +222,8 @@ Test_gene_name = args[2]
 reg_result = check_Test_gene_LR(Test_gene)
 
 #### Plot
-reg_result = read.table(paste0(outdir, 'Association_tests_',Test_gene_name, '_LR.csv'),
-                        sep= ',', header = T, stringsAsFactors = F)
+#reg_result = read.table(paste0(outdir, 'Association_tests_',Test_gene_name, '_LR.csv'),
+#                        sep= ',', header = T, stringsAsFactors = F)
 sig = reg_result[reg_result$FDR < 0.1, ]
 plot_gene_sex(Test_gene, sig)
 plot_gene_age(Test_gene, sig)
