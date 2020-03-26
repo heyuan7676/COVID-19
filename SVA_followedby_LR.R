@@ -62,7 +62,8 @@ test_association <- function(tissue){
     	pvalue = summary(fitsv)$coefficients['covSEX', 4]
     	result_tested_gene = rbind(result_tested_gene, c(coef, pvalue, median(as.numeric(gene_y))))
     	# save
-    	control_model = lm(t(gene_y)~as.matrix(cov)[,2:ncol(cov)])
+    	sv_cols = paste0("SV", seq(1, ncol(cov)-1))
+    	control_model = lm(t(gene_y)~as.matrix(cov)[,sv_cols])
     	save_df = cbind(save_df, control_model$residuals)
     	save_df_cols = c(save_df_cols, 'SVA_SEX')
     }
