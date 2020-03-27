@@ -39,6 +39,8 @@ readin_data_in_tissue <- function(tissue, Test_gene){
   if(Test_gene %in% rownames(gene_tpm_in_the_tissue)){
    Test_gene_tpm = data.frame("SUBJID" = samples_used)
    Test_gene_tpm$geneEXP = as.numeric(gene_tpm_in_the_tissue[Test_gene, samples_used])
+  }else{
+   return ()
   }
   
   # merge
