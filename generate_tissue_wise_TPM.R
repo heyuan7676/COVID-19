@@ -5,8 +5,10 @@ tpm.whole = fread(paste0(datadir, 'gene_pc_lc_tpm.txt'))
 
 for (tissue in sort(unique(samples$SMTSD))){
   print(tissue)
+
   # sample covariates
   sample_in_the_tissue = samples %>% filter(SMTSD == tissue)
+
   # restrict to the samples used in GTEx
   tis = gsub(" ", "_", gsub('\\)', '', gsub(' \\(', '_', gsub(' - ', '_', tissue))))
    genotype_PCs  = tryCatch(read.table(paste0(datadir, 'GTEx_Analysis_v8_eQTL_covariates/',tis,'.v8.covariates.txt'),

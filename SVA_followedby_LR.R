@@ -1,8 +1,6 @@
 library(sva)
 source("utils.R")
 
-dir.create(file.path(datadir, "SVA_corrected/"), showWarnings = FALSE)
-
 test_association <- function(tissue){
   # sample covariates
   sample_in_the_tissue = samples %>% filter(SMTSD == tissue)
@@ -13,37 +11,45 @@ test_association <- function(tissue){
   sample_in_the_tissue = as.data.frame(sample_in_the_tissue)
   rownames(sample_in_the_tissue) = sample_in_the_tissue$SAMPID
 
-  tissue_name = gsub(" ", "_", gsub('\\)', '', gsub(' \\(', '_', gsub(' - ', '_', tissue))))
   
   # gene TPM
+  tissue_name = gsub(" ", "_", gsub('\\)', '', gsub(' \\(', '_', gsub(' - ', '_', tissue))))
   gene_tpm_in_the_tissue = read.table(paste0(datadir, 'tissue_tpm/', tissue_name, '_gene_TPM.txt'),
                                       sep = '\t', header = T, stringsAsFactors = F, row.names = 1)
   gene_tpm_in_the_tissue = log10(gene_tpm_in_the_tissue + 1)
 
-  sample_in_the_tissue = sample_in_the_tissue[gsub("\\.", "-", colnames(gene_tpm_in_the_tissue)), ]
 
-  ## in generate_tissue_wise_TPM.R: make sure that sample orders in sample_in_the_tissue is the same as in gene_tpm_in_the_tissue 
+  ## make sure that sample orders in sample_in_the_tissue is the same as in gene_tpm_in_the_tissue 
+  sample_in_the_tissue = sample_in_the_tissue[gsub("\\.", "-", colnames(gene_tpm_in_the_tissue)), ]
   save_df = NULL
   save_df = cbind(save_df, sample_in_the_tissue$SAMPID)
   save_df = cbind(save_df, sample_in_the_tissue$AGE)
   save_df = cbind(save_df, sample_in_the_tissue$Gender)
   save_df_cols = c('SAMPID', 'AGE', 'SEX')
- 
+
+
   ### 1. Test association with AGE_GROUP
   ## fit linear model
   if(Test_gene %in% rownames(gene_tpm_in_the_tissue)){
+    tpm_matrix_gene_names = rownames(gene_tpm_in_the_tissue)
+  }else if(Test_gene %in% sapply(rownames(gene_tpm_in_the_tissue), function(x) strsplit(x, '\\.')[[1]][1])){
+    tpm_matrix_gene_names = sapply(rownames(gene_tpm_in_the_tissue), function(x) strsplit(x, '\\.')[[1]][1])
+  }else{
+    tpm_matrix_gene_names = c()
+  }
+  if(Test_gene %in% tpm_matrix_gene_names){
     print(paste0('Perform LR using SVs for ', tissue))
-    gene_y = gene_tpm_in_the_tissue[Test_gene,]
+    gene_y = as.matrix(as.numeric(gene_tpm_in_the_tissue[which(tpm_matrix_gene_names == Test_gene), ]))
     # AGE
     cov = read.table(paste0(datadir, 'SVs/', tissue_name, '_SVs_AGE.txt'), sep = '\t', header = T)
 	  cov = as.matrix(cov)
-    fitsv = lm(t(gene_y)~cov)
+    fitsv = lm(gene_y~cov)
     coef = summary(fitsv)$coefficients['covAGE_GROUP', 3]
     pvalue = summary(fitsv)$coefficients['covAGE_GROUP', 4]
     result_tested_gene = c(coef, pvalue, median(as.numeric(gene_y)))
     # save
     sv_cols = paste0("SV", seq(1, ncol(cov)-1))
-    control_model = lm(t(gene_y)~as.matrix(cov)[,sv_cols])
+    control_model = lm(gene_y~as.matrix(cov)[,sv_cols])
     save_df = cbind(save_df, control_model$residuals)
     save_df_cols = c(save_df_cols, 'SVA_AGE')
  
@@ -57,13 +63,13 @@ test_association <- function(tissue){
 	result_tested_gene = rbind(result_tested_gene, c(0, -1, 0))
     }else{
 		cov = as.matrix(cov)
-    	fitsv = lm(t(gene_y)~cov)
+    	fitsv = lm(gene_y~cov)
     	coef = summary(fitsv)$coefficients['covSEX', 3]
     	pvalue = summary(fitsv)$coefficients['covSEX', 4]
     	result_tested_gene = rbind(result_tested_gene, c(coef, pvalue, median(as.numeric(gene_y))))
     	# save
     	sv_cols = paste0("SV", seq(1, ncol(cov)-1))
-    	control_model = lm(t(gene_y)~as.matrix(cov)[,sv_cols])
+    	control_model = lm(gene_y~as.matrix(cov)[,sv_cols])
     	save_df = cbind(save_df, control_model$residuals)
     	save_df_cols = c(save_df_cols, 'SVA_SEX')
     }
@@ -78,17 +84,16 @@ test_association <- function(tissue){
               sep = '\t', quote = FALSE, row.names = F)
 
   result_tested_gene = as.data.frame(result_tested_gene)
-  colnames(result_tested_gene) = c("coefficient", "p-value", "median_TPM")
+  colnames(result_tested_gene) = c("t_stat", "p-value", "median_TPM")
   result_tested_gene$Variable  = c("AGE", "SEX")
-  result_tested_gene$Gene      = Test_gene
+  result_tested_gene$Gene      = Test_gene_name
   result_tested_gene$Tissue    = tissue
 
   return(result_tested_gene)
 }
 
 
-check_Test_gene_SVA <- function(Test_gene){
-  dir.create(file.path(datadir, "SVA_corrected/", Test_gene_name, '/'), showWarnings = FALSE)
+check_Test_gene_SVA <- function(){
   result = data.frame()
   for(tissue in sort(unique(samples$SMTSD))){
     result_tested_gene = tryCatch(test_association(tissue), warning = function (w) {print(paste("No data available for tissue type", tis))},
@@ -109,7 +114,7 @@ check_Test_gene_SVA <- function(Test_gene){
   
   ## compute FDR for each gene seperately
   result$FDR = p.adjust(result$"p-value", method = 'BH')
-  result = result[,c("Tissue", "Gene", "Variable", "median_TPM", "coefficient", "p-value", "FDR")]
+  result = result[,c("Tissue", "Gene", "Variable", "median_TPM", "t_stat", "p-value", "FDR")]
   result = result[order(result$"p-value"), ]
   write.table(result, paste0(outdir, 'Association_tests_', Test_gene_name,'_SVA.csv'), sep=',', row.names=F, quote = FALSE)
   
@@ -140,7 +145,6 @@ plot_one_row <- function(rowi){
     color_p = 'Set1'
   }
   ggtitle_text = paste0(tissue,
-                        ':\n coef = ', round(rowi$coefficient,3),
                         ':\n median TPM = ', round(rowi$median_TPM, 3))
   df_for_plot = data.frame("Covariate"=x, "y"=y)
   
@@ -159,7 +163,7 @@ plot_one_row <- function(rowi){
     scale_fill_brewer(palette = color_p) + 
     theme(legend.position = 'none')
   
-  png(paste0(outdir, 'plots/', Test_gene_name, '_',tissue_name,'_',as.character(rowi['Variable']),'_SVA.png'),
+  png(paste0(outdir, 'plots/', Test_gene_name, '/', Test_gene_name, '_',tissue_name,'_',as.character(rowi['Variable']),'_SVA.png'),
       res = 130, height = 500, width = 600)
   print(gg)
   dev.off()
@@ -172,11 +176,16 @@ args <- commandArgs(TRUE)
 Test_gene = args[1]
 Test_gene_name = args[2]
 
-reg_result = check_Test_gene_SVA(Test_gene)
+
+dir.create(file.path(datadir, "SVA_corrected/"), showWarnings = FALSE)
+dir.create(file.path(datadir, "SVA_corrected/", Test_gene_name, '/'), showWarnings = FALSE)
+dir.create(file.path(outdir, "plots/", Test_gene_name, '/'), showWarnings = FALSE)
+
+reg_result = check_Test_gene_SVA()
 
 # plot
-#reg_result = read.table(paste0(outdir, 'Association_tests_', Test_gene_name,'_SVA.csv'), 
-#                        sep=',', header = T, stringsAsFactors = F)
+reg_result = read.table(paste0(outdir, 'Association_tests_', Test_gene_name,'_SVA.csv'), 
+                        sep=',', header = T, stringsAsFactors = F)
 sig = reg_result[reg_result$FDR < 0.05, ]
 for(i in seq(1, nrow(sig))){
 	rowI = sig[i, ]
