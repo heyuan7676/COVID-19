@@ -16,31 +16,6 @@ get_tissue_above_lung_ace2 <- function(){
   return(qualify_tissues) 
 }
 
-
-### read in ACE2 and TMPRSS2 gene
-plot_corrected_TPM <- function(Test_gene){
-  df = read.table(paste0(datadir, 'corrected_gene_exp/',Test_gene,'.csv'), sep=',', header = T, stringsAsFactors = F)
-  medians = df %>% group_by(SMTSD) %>% summarize(Median = median(corrected_geneEXP))
-  
-  colors = gtex_col$tissue_color_hex[rev(order(medians$Median))]
-  df$SMTSD = factor(df$SMTSD, levels = medians$SMTSD[rev(order(medians$Median))])
-  
-  g = ggplot(aes(x = SMTSD, y = corrected_geneEXP), data = df) + 
-    geom_boxplot(aes(fill  = SMTSD)) + 
-    scale_fill_manual(values = colors) +
-    theme_bw() + 
-    theme(axis.text.x = element_text(angle = 90, hjust=1,vjust=0.2),
-          legend.position =  'none') + 
-    ylab("Corrected expression values") + 
-    xlab("")
-  
-  png(paste0('results/PPI_results/',Test_gene,'_corrected_for_cov.png'), res = 120, width = 850, height = 800)
-  print(g)
-  dev.off()
-}
-plot_corrected_TPM('ACE2')
-plot_corrected_TPM("TMPRSS2")
-
 PPI_gene_ranks = read.table('results/PPI_results/Rank_median_in_tissues_corrected_for_COVs.csv', sep = ',',
                             header = T, stringsAsFactors = F)
 PPI_gene_ranks = PPI_gene_ranks[order(rownames(PPI_gene_ranks)), ]
@@ -190,6 +165,10 @@ dev.off()
 druggable_genes = read.table('PPI_data/druggable_genes.txt', 
                              sep='\t', header = T,stringsAsFactors = F)
 druggable_genes = druggable_genes$Gene_Name
+
+### interesting gene
+druggable_genes = c("AGPS", "AP3B1", "ERC1", "FBN1", 
+                    "LOX", "MOV10", "PABPC4", "QSOX2", "SLC25A21")
 show_idx = c()
 for(g in druggable_genes){
   show_idx = c(show_idx, which(colnames(PPI_gene_ranks) == g))
@@ -228,7 +207,7 @@ ht_cluster_genes = Heatmap(as.matrix(PPI_gene_ranks),
 
 
 setEPS()
-postscript("results/PPI_results/PPI_ranks_corrected_for_cov_heatmap_clusterGenes_v2.eps", height = 5, width = 16)
+postscript("results/PPI_results/PPI_ranks_corrected_for_cov_heatmap_clusterGenes_v3.eps", height = 5, width = 16)
 draw(ht_cluster_genes, heatmap_legend_side = 'bottom') 
 dev.off()
 

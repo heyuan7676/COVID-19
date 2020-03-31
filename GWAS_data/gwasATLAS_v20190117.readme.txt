@@ -1,0 +1,39 @@
+##### GWAS ATLAS release v20190117 #####
+# Total 4155 GWAS
+# Last curated 2018 October
+#
+# 11 Feb 2019: 
+#    Minor update in Nhits column
+#
+# 12 Jun 2019:
+#    Links were updated for ID 3185-3784 
+#
+# Kyoko Watanabe (k.watanabe@vu.nl)
+########################################
+
+id	Unique ID in the database (arbitrary ordered).
+PMID	Pubmed ID of the original study. If the study is not published, mentioned in this feature or dio of bioRxiv is provided.
+Year	The year of the original study is published. If the study is not published, the year of the data was distributed.
+File	Link to the original summary statistics. When submission of online form is required, the link is to the online form. Otherwise, directly linked to the downloadable file.
+Website	Link to the website if available (not the direct link to the summary statistics file).
+Consortium	The name of consortium if available.
+Domain	General domain of the trait.
+ChapterLevel	Chapter of the trait obtained from either ICD10 or ICF10.
+SubchapterLevel	Subchapter of the trait obtained from either ICD10 or ICF10.
+Trait	The trait name used in the original study (or as close as possible).
+uniqTrait	The trait name harmonised across database. This matches traits with slightly different name in the "Trait" feature, but does not mean that phenotype definition is exactly the same. Please refer the original study for detailed phenotype definition.
+Population	One of the five super ancestry populations defined in 1000 genome project, AFR (African), AMR (American), EAS (East asian), EUR (European), and SAS (South asian). If the GWAS is trans ethnic study, all of the population is listed but the first one has the highest proportion of the total sample size of the study. For example, EUR+EAS+SAS means the study cohorts are mix of three populations, but EUR samples occupy the highest proportion of the total sample size (does not have to be majority). For UK Biobank cohort, it is "UKB1 (EUR)" for release 1 and "UKB2 (EUR)" for release 2.
+Ncase	For binary trait, the number of cases.
+Ncontrol	For binary trait, the number of controls.
+N	Total number of sample size used for the analyses. This number is the total sample size used to generate the summary statistics which is publicly available. In some meta-analysis studies, some cohorts are restricted to distribute summary statistics. In that case, publicly available summary statistics dose not include specific cohorts and the sample size in this database corresponds to the sample size excluding those cohorts.
+Nsnps	The number of SNPs in the original GWAS summary statistics.
+Nhits	The number of risk loci. The definition of risk loci is described in the next section, 4. Definition of lead SNPs and risk loci.
+SNPh2	SNP heritability estimated by LD score regression [1]. This is only available for GWAS that meet certain criteria, otherwise blank. See section 5. Estimation of SNP heritability and genetic correlation with LD score regression for details.
+SNPh2_se	If SNP h2 is available, standard error of SNP h2.
+SNPh2_z	If SNP h2 is available, Z statistics of SNP h2.
+LambdaGC	If SNP h2 is available, estimated Lambda GC.
+Chi2	If SNP h2 is available, estimated chi square.
+Intercept	If SNP h2 is available, estimated single trait intercept.
+Note	Any information that is relevant, extracted from the original study.
+DateAdded	Date when the GWAS was curated.
+DateLastModified	Last date when the database information was modified.

@@ -16,7 +16,6 @@ test_association <- function(tissue){
   tissue_name = gsub(" ", "_", gsub('\\)', '', gsub(' \\(', '_', gsub(' - ', '_', tissue))))
   gene_tpm_in_the_tissue = read.table(paste0(datadir, 'tissue_tpm/', tissue_name, '_gene_TPM.txt'),
                                       sep = '\t', header = T, stringsAsFactors = F, row.names = 1)
-  gene_tpm_in_the_tissue = log10(gene_tpm_in_the_tissue + 1)
 
 
   ## make sure that sample orders in sample_in_the_tissue is the same as in gene_tpm_in_the_tissue 
@@ -44,7 +43,7 @@ test_association <- function(tissue){
     cov = read.table(paste0(datadir, 'SVs/', tissue_name, '_SVs_AGE.txt'), sep = '\t', header = T)
 	  cov = as.matrix(cov)
     fitsv = lm(gene_y~cov)
-    coef = summary(fitsv)$coefficients['covAGE_GROUP', 3]
+    coef = summary(fitsv)$coefficients['covAGE_GROUP', 1]
     pvalue = summary(fitsv)$coefficients['covAGE_GROUP', 4]
     result_tested_gene = c(coef, pvalue, median(as.numeric(gene_y)))
     # save
@@ -64,7 +63,7 @@ test_association <- function(tissue){
     }else{
 		cov = as.matrix(cov)
     	fitsv = lm(gene_y~cov)
-    	coef = summary(fitsv)$coefficients['covSEX', 3]
+    	coef = summary(fitsv)$coefficients['covSEX', 1]
     	pvalue = summary(fitsv)$coefficients['covSEX', 4]
     	result_tested_gene = rbind(result_tested_gene, c(coef, pvalue, median(as.numeric(gene_y))))
     	# save
@@ -84,7 +83,7 @@ test_association <- function(tissue){
               sep = '\t', quote = FALSE, row.names = F)
 
   result_tested_gene = as.data.frame(result_tested_gene)
-  colnames(result_tested_gene) = c("t_stat", "p-value", "median_TPM")
+  colnames(result_tested_gene) = c("coefficient", "p-value", "median_TPM")
   result_tested_gene$Variable  = c("AGE", "SEX")
   result_tested_gene$Gene      = Test_gene_name
   result_tested_gene$Tissue    = tissue
@@ -114,7 +113,7 @@ check_Test_gene_SVA <- function(){
   
   ## compute FDR for each gene seperately
   result$FDR = p.adjust(result$"p-value", method = 'BH')
-  result = result[,c("Tissue", "Gene", "Variable", "median_TPM", "t_stat", "p-value", "FDR")]
+  result = result[,c("Tissue", "Gene", "Variable", "median_TPM", "coefficient", "p-value", "FDR")]
   result = result[order(result$"p-value"), ]
   write.table(result, paste0(outdir, 'Association_tests_', Test_gene_name,'_SVA.csv'), sep=',', row.names=F, quote = FALSE)
   
@@ -145,6 +144,7 @@ plot_one_row <- function(rowi){
     color_p = 'Set1'
   }
   ggtitle_text = paste0(tissue,
+                        ":\n coef = ", round(rowi$coefficient, 3),
                         ':\n median TPM = ', round(rowi$median_TPM, 3))
   df_for_plot = data.frame("Covariate"=x, "y"=y)
   
